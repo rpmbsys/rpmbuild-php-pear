@@ -1,0 +1,46 @@
+version: "3.5"
+services:
+  centos6pearbuildphp5:
+    volumes:
+      - rpms:/home/centos/rpmbuild/SRPMS
+      - rpm6:/home/centos/rpmbuild/RPMS
+    build:
+      context: build/6/php/5.6
+    image: aursu/pearbuild:6-php5
+  centos6pearbuildphp7:
+    volumes:
+      - rpms:/home/centos/rpmbuild/SRPMS
+      - rpm6:/home/centos/rpmbuild/RPMS
+    build:
+      context: build/6/php/7.1
+    image: aursu/pearbuild:6-php71
+  centos7pearbuildphp5:
+    volumes:
+      - rpms:/home/centos/rpmbuild/SRPMS
+      - rpm7:/home/centos/rpmbuild/RPMS
+    build:
+      context: build/7/php/5.6
+    image: aursu/pearbuild:7-php5
+  centos7pearbuildphp7:
+    volumes:
+      - rpms:/home/centos/rpmbuild/SRPMS
+      - rpm7:/home/centos/rpmbuild/RPMS
+    build:
+      context: build/7/php/7.1
+    image: aursu/pearbuild:7-php71
+  centos7pearbuildphp7:
+    volumes:
+      - rpms:/home/centos/rpmbuild/SRPMS
+      - rpm7:/home/centos/rpmbuild/RPMS
+    build:
+      context: build/7/php/7.1
+      dockerfile: Dockerfile.rel
+    image: aursu/pearbuild:7-php71-rel
+
+volumes:
+  rpms:
+    name: rpms
+  rpm6:
+    name: rpm6
+  rpm7:
+    name: rpm7
