@@ -1,0 +1,44 @@
+version: 2
+jobs:
+  build:
+    machine:
+      docker_layer_caching: true
+    steps:
+      - run:
+          name: Upgrade Docker CE
+          command: |
+            sudo apt-get update
+            sudo apt-get install docker-ce=18.03.1~ce-0~ubuntu
+      - run:
+          name: Upgrade Docker Compose
+          command: |
+            sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+      - checkout
+      - run:
+          name: Git submodules sync
+          command: |
+            git submodule sync
+            git submodule update --init
+      - run:
+          name: Start docker services for rpmbuild
+          command: docker-compose -f rpmbuild/docker-compose.yml up -d
+          background: true
+          no_output_timeout: 2h
+      - run:
+          name: Build PHP-PEAR Docker images
+          command: docker-compose build --no-cache --pull
+      - run:
+          name: Build PHP-PEAR RPM packages
+          command: docker-compose up
+      - run:
+          name: Copy RPM packages
+          command: |
+            sudo rm -rf ~/el6 ~/el7
+            mkdir -p ~/el6 ~/el7
+            docker cp rpmbuild_webrepo_1:/home/centos-6/rpmbuild/RPMS ~/el6/
+            docker cp rpmbuild_webrepo_1:/home/centos-7/rpmbuild/RPMS ~/el7/
+      - store_artifacts:
+          path: ~/el6/RPMS
+      - store_artifacts:
+          path: ~/el7/RPMS
