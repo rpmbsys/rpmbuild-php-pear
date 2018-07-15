@@ -20,6 +20,10 @@
 %global pear_sharedstatedir %{php_sharedstatedir}/pear
 %global pear_datadir        %{php_datadir}
 %global tests_datadir       %{php_datadir}/tests
+%global bin_cli             php%{program_suffix}
+%global bin_pecl            pecl%{program_suffix}
+%global bin_pear            pear%{program_suffix}
+%global bin_peardev         peardev%{program_suffix}
 %else
 %global main_name           php
 %global php_sysconfdir      %{_sysconfdir}
@@ -30,6 +34,10 @@
 %global pear_sharedstatedir %{_sharedstatedir}/pear
 %global pear_datadir        %{_datadir}
 %global tests_datadir       %{_datadir}/tests
+%global bin_cli             php
+%global bin_pecl            pecl
+%global bin_pear            pear
+%global bin_peardev         peardev
 %endif
 
 %global pear_name           %{main_name}-pear
@@ -38,10 +46,7 @@
 %global devel_name          %{main_name}-devel
 %global peardir             %{pear_datadir}/pear
 %global metadir             %{pear_sharedstatedir}
-%global bin_cli             php%{program_suffix}
-%global bin_pecl            pecl%{program_suffix}
-%global bin_pear            pear%{program_suffix}
-%global bin_peardev         peardev%{program_suffix}
+
 
 %global getoptver 1.4.1
 %global arctarver 1.4.3
@@ -93,7 +98,7 @@ Source25: http://pear.php.net/get/PEAR_Manpages-%{manpages}.tgz
 
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: php(language) >= 7 
+BuildRequires: php(language) >= 7
 BuildRequires: %{cli_name}
 BuildRequires: %{xml_name}
 BuildRequires: gnupg
@@ -177,9 +182,9 @@ cp %{SOURCE1} .
 sed -e 's:@BINDIR@:%{_bindir}:' \
     -e 's:@LIBDIR@:%{_localstatedir}/lib:' \
 %if %{with_relocation}
-    %{SOURCE13} > macros.pear
-%else
     %{SOURCE113} > macros.pear
+%else
+    %{SOURCE13} > macros.pear
 %endif
 
 %build
@@ -228,15 +233,15 @@ export INSTALL_ROOT=%{buildroot}
 
 # Replace /usr/bin/* with simple scripts:
 %if %{with_relocation}
-install -m 755 %{SOURCE10} %{buildroot}%{_bindir}/%{bin_pear}
-install -m 755 %{SOURCE11} %{buildroot}%{_bindir}/%{bin_pecl}
-install -m 755 %{SOURCE12} %{buildroot}%{_bindir}/%{bin_peardev}
-%{_bindir}/%{bin_cli} %{SOURCE3} %{buildroot}%{php_sysconfdir}/pear.conf %{_datadir}
-%else
 install -m 755 %{SOURCE110} %{buildroot}%{_bindir}/%{bin_pear}
 install -m 755 %{SOURCE111} %{buildroot}%{_bindir}/%{bin_pecl}
 install -m 755 %{SOURCE112} %{buildroot}%{_bindir}/%{bin_peardev}
 %{_bindir}/%{bin_cli} %{SOURCE103} %{buildroot}%{php_sysconfdir}/pear.conf %{_datadir}
+%else
+install -m 755 %{SOURCE10} %{buildroot}%{_bindir}/%{bin_pear}
+install -m 755 %{SOURCE11} %{buildroot}%{_bindir}/%{bin_pecl}
+install -m 755 %{SOURCE12} %{buildroot}%{_bindir}/%{bin_peardev}
+%{_bindir}/%{bin_cli} %{SOURCE3} %{buildroot}%{php_sysconfdir}/pear.conf %{_datadir}
 %endif
 
 # Display configuration for debug
@@ -786,7 +791,7 @@ fi
 - fix /usr/bin/{pecl,peardev} (#174882)
 
 * Thu Dec  1 2005 Joe Orton <jorton@redhat.com> 1:1.4.5-2
-- add virtual provides (#173806) 
+- add virtual provides (#173806)
 
 * Wed Nov 23 2005 Joe Orton <jorton@redhat.com> 1.4.5-1
 - initial build (Epoch: 1 to allow upgrade from php-pear-5.x)
