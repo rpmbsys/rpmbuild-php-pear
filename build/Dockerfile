@@ -1,5 +1,5 @@
 ARG centos=7
-ARG buildrepo=php5build
+ARG buildrepo=php7build
 
 FROM aursu/${buildrepo}:${centos}-build
 

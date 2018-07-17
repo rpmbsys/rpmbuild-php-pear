@@ -41,6 +41,13 @@ jobs:
             docker cp rpmbuild_webrepo_1:/home/centos-6/rpmbuild/RPMS ~/el6/
             docker cp rpmbuild_webrepo_1:/home/centos-7/rpmbuild/RPMS ~/el7/
             rm -rf ~/el*/RPMS/repodata
+      - run:
+          name: Build PHP-PEAR Dcoker build images
+          command: |
+            sleep 30
+            docker-compose -f build/docker-compose.yml build --no-cache
+            docker push aursu/pearbuild:7-php7build
+            docker push aursu/pearbuild:6-php7build
       - store_artifacts:
           path: ~/el6/RPMS
       - store_artifacts:
