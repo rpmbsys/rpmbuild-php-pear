@@ -13,7 +13,7 @@ services:
     command: ["-ba", "--with", "relocation"]
     volumes:
       - rpms:/home/centos/rpmbuild/SRPMS
-      - rpm7:/home/centos/rpmbuild/RPMS
+      - rpm6:/home/centos/rpmbuild/RPMS
     build:
       context: .
       args:
