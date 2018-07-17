@@ -91,8 +91,6 @@ Requires:  php-bz2
 # Structures_Graph: none
 # XML_Util: pcre
 # optional: overload and xdebug
-# for /var/www/html ownership
-Requires: httpd-filesystem
 
 
 %description
