@@ -1,0 +1,22 @@
+version: "3.5"
+services:
+  centos6pearbuildphp5build:
+    networks:
+      - buildnet
+    build:
+      context: 6/php/7.1
+      dockerfile: Dockerfile.build
+    image: aursu/pearbuild:6-php7build
+  centos7pearbuildphp5build:
+    networks:
+      - buildnet
+    build:
+      context: 7/php/7.1
+      dockerfile: Dockerfile.build
+      network: buildnet
+    image: aursu/pearbuild:7-php7build
+
+networks:
+  buildnet:
+    external: true
+    name: buildnet
