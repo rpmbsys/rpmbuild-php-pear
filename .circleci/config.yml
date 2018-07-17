@@ -46,7 +46,7 @@ jobs:
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             sleep 30
-            docker-compose -f build/docker-compose.yml build --no-cache
+            docker-compose -f build/docker-compose.yml build --no-cache --pull
             docker push aursu/pearbuild:7-build
             docker push aursu/pearbuild:7-build-rel
             docker push aursu/pearbuild:6-build
@@ -101,7 +101,7 @@ jobs:
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             sleep 30
-            docker-compose -f build/docker-compose.php5.yml build --no-cache
+            docker-compose -f build/docker-compose.php5.yml build --no-cache --pull
             docker push aursu/pearbuild:7-php5build
             docker push aursu/pearbuild:6-php5build
       - store_artifacts:
