@@ -9,7 +9,7 @@ services:
       args:
         centos: 6
     image: aursu/pearbuild:el6
-  centos7pearbuildphp7rel:
+  centos6pearbuildphp7rel:
     command: ["-ba", "--with", "relocation"]
     volumes:
       - rpms:/home/centos/rpmbuild/SRPMS
