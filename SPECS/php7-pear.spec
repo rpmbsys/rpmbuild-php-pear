@@ -141,8 +141,6 @@ Requires: php-bz2 >= 7
 # Structures_Graph: none
 # XML_Util: pcre
 # optional: overload and xdebug
-# for /var/www/html ownership
-Requires: httpd-filesystem
 
 
 %description
