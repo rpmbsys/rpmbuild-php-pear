@@ -44,10 +44,13 @@ jobs:
       - run:
           name: Build PHP-PEAR Dcoker build images
           command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
             sleep 30
             docker-compose -f build/docker-compose.yml build --no-cache
-            docker push aursu/pearbuild:7-php7build
-            docker push aursu/pearbuild:6-php7build
+            docker push aursu/pearbuild:7-build
+            docker push aursu/pearbuild:7-build-rel
+            docker push aursu/pearbuild:6-build
+            docker push aursu/pearbuild:6-build-rel
       - store_artifacts:
           path: ~/el6/RPMS
       - store_artifacts:
@@ -93,6 +96,14 @@ jobs:
             docker cp rpmbuild_webrepo_1:/home/centos-6/rpmbuild/RPMS ~/php5/el6/
             docker cp rpmbuild_webrepo_1:/home/centos-7/rpmbuild/RPMS ~/php5/el7/
             rm -rf ~/php5/*/RPMS/repodata
+      - run:
+          name: Build PHP-PEAR Dcoker build images
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            sleep 30
+            docker-compose -f build/docker-compose.php5.yml build --no-cache
+            docker push aursu/pearbuild:7-php5build
+            docker push aursu/pearbuild:6-php5build
       - store_artifacts:
           path: ~/php5
 workflows:
