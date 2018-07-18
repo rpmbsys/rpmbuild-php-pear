@@ -9,7 +9,7 @@ services:
         centos: 6
         buildrepo: php5build
       network: buildnet
-    image: aursu/pearbuild:6-php5build
+    image: aursu/pearbuild:6-build-php5
   centos7pearbuildphp5build:
     networks:
       - buildnet
@@ -18,7 +18,7 @@ services:
       args:
         buildrepo: php5build
       network: buildnet
-    image: aursu/pearbuild:7-php5build
+    image: aursu/pearbuild:7-build-php5
 
 networks:
   buildnet:
