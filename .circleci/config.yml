@@ -42,6 +42,14 @@ jobs:
             docker cp rpmbuild_webrepo_1:/home/centos-7/rpmbuild/RPMS ~/el7/
             rm -rf ~/el*/RPMS/repodata
       - run:
+          name: Upload RPM packages into Bintray
+          command: |
+            docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm \
+              -e BINTRAY_USER=$BINTRAY_USER \
+              -e BINTRAY_API_KEY=$BINTRAY_API_KEY \
+              -e BINTRAY_REPO=$BINTRAY_REPO \
+              -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos7bintray
+      - run:
           name: Build PHP-PEAR Dcoker build images
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
@@ -97,7 +105,15 @@ jobs:
             docker cp rpmbuild_webrepo_1:/home/centos-7/rpmbuild/RPMS ~/php5/el7/
             rm -rf ~/php5/*/RPMS/repodata
       - run:
-          name: Build PHP-PEAR Dcoker build images
+          name: Upload RPM packages into Bintray
+          command: |
+            docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm \
+              -e BINTRAY_USER=$BINTRAY_USER \
+              -e BINTRAY_API_KEY=$BINTRAY_API_KEY \
+              -e BINTRAY_REPO=$BINTRAY_REPO \
+              -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos6bintray
+      - run:
+          name: Build PHP-PEAR Docker build images
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             sleep 30
