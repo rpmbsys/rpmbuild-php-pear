@@ -3,6 +3,8 @@ jobs:
   build:
     machine:
       docker_layer_caching: true
+    environment:
+      PACKAGE_VCS_URL: https://github.com/aursu/rpmbuild-php-pear
     steps:
       - run:
           name: Upgrade Docker CE
@@ -66,6 +68,8 @@ jobs:
   build5:
     machine:
       docker_layer_caching: true
+    environment:
+      PACKAGE_VCS_URL: https://github.com/aursu/rpmbuild-php-pear
     steps:
       - run:
           name: Upgrade Docker CE
