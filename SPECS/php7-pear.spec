@@ -47,9 +47,8 @@
 %global peardir             %{pear_datadir}/pear
 %global metadir             %{pear_sharedstatedir}
 
-
-%global getoptver 1.4.1
-%global arctarver 1.4.3
+%global getoptver 1.4.2
+%global arctarver 1.4.5
 # https://pear.php.net/bugs/bug.php?id=19367
 # Structures_Graph 1.0.4 - incorrect FSF address
 %global structver 1.1.1
@@ -66,8 +65,8 @@
 
 Summary: PHP Extension and Application Repository framework
 Name: %{pear_name}
-Version: 1.10.5
-Release: 2%{?dist}
+Version: 1.10.8
+Release: 1%{?dist}
 Epoch: 1
 # PEAR, PEAR_Manpages, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv3+
@@ -101,11 +100,14 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php(language) >= 7
 BuildRequires: %{cli_name}
 BuildRequires: %{xml_name}
-BuildRequires: gnupg
+BuildRequires: %{_bindir}/gpg
 # For pecl_xmldir macro
 BuildRequires: %{devel_name}
 %if %{with_tests}
 BuildRequires:  %{_bindir}/phpunit
+%endif
+%if 0%{?fedora}
+BuildRequires:  php-fedora-autoloader-devel
 %endif
 
 Provides: php-pear(Console_Getopt) = %{getoptver}
@@ -120,6 +122,13 @@ Provides: php-composer(pear/archive_tar) = %{arctarver}
 Provides: php-composer(pear/pear-core-minimal) = %{version}
 Provides: php-composer(pear/structures_graph) = %{structver}
 Provides: php-composer(pear/xml_util) = %{xmlutil}
+%if 0%{?fedora}
+Provides: php-autoloader(pear/console_getopt) = %{getoptver}
+Provides: php-autoloader(pear/archive_tar) = %{arctarver}
+Provides: php-autoloader(pear/pear-core-minimal) = %{version}
+Provides: php-autoloader(pear/structures_graph) = %{structver}
+Provides: php-autoloader(pear/xml_util) = %{xmlutil}
+%endif
 
 # Archive_Tar requires 5.2
 # XML_Util, Structures_Graph require 5.3
@@ -141,7 +150,9 @@ Requires: php-bz2 >= 7
 # Structures_Graph: none
 # XML_Util: pcre
 # optional: overload and xdebug
-
+%if 0%{?fedora}
+Requires: php-composer(fedora/autoloader)
+%endif
 
 %description
 PEAR is a framework and distribution system for reusable PHP
@@ -186,8 +197,31 @@ sed -e 's:@BINDIR@:%{_bindir}:' \
 %endif
 
 %build
-# This is an empty build section.
+%if 0%{?fedora}
+# Create per package autoloader
+phpab --template fedora \
+      --output PEAR/autoload.php\
+      PEAR OS System.php PEAR.php
 
+phpab --template fedora \
+      --output Structures/Graph/autoload.php \
+      Structures
+
+mkdir Archive/Tar
+phpab --template fedora \
+      --output Archive/Tar/autoload.php \
+      Archive
+
+mkdir Console/Getopt
+phpab --template fedora \
+      --output Console/Getopt/autoload.php \
+      Console
+
+mkdir XML/Util
+phpab --template fedora \
+      --output XML/Util/autoload.php \
+      XML
+%endif
 
 %install
 rm -rf %{buildroot}
@@ -255,7 +289,7 @@ install -m 644 -D macros.pear \
 
 # apply patches on installed PEAR tree
 pushd %{buildroot}%{peardir}
-: no patch \\o/
+: no patch
 popd
 
 # Why this file here ?
@@ -263,6 +297,13 @@ rm -rf %{buildroot}/.depdb* %{buildroot}/.lock %{buildroot}/.channels %{buildroo
 
 # Need for re-registrying XML_Util
 install -m 644 *.xml %{buildroot}%{pear_sharedstatedir}/pkgxml
+
+%if 0%{?fedora}
+# install autoloaders
+for i in PEAR/autoload.php Structures/Graph/autoload.php Archive/Tar/autoload.php Console/Getopt/autoload.php XML/Util/autoload.php
+do install -Dpm 644 $i %{buildroot}%{peardir}/$i
+done
+%endif
 
 %check
 # Check that no bogus paths are left in the configuration, or in
@@ -400,6 +441,50 @@ fi
 %{_mandir}/man5/pear.conf.5*
 
 %changelog
+* Fri Feb  8 2019 Remi Collet <remi@remirepo.net> - 1:1.10.8-1
+- update PEAR to 1.10.8
+- source generated from github tag
+- drop patch merged upstream
+
+* Thu Feb  7 2019 Remi Collet <remi@remirepo.net> - 1:1.10.7-5
+- update Console_Getopt to 1.4.2
+
+* Sat Feb 02 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.7-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
+
+* Thu Jan  3 2019 Remi Collet <remi@remirepo.net> - 1:1.10.7-3
+- update Archive_Tar to 1.4.5
+
+* Fri Dec 21 2018 Remi Collet <remi@remirepo.net> - 1:1.10.7-2
+- update Archive_Tar to 1.4.4
+- drop PHP 7.2 deprecated option, patch from
+  https://github.com/pear/pear-core/pull/83
+
+* Thu Dec  6 2018 Remi Collet <remi@remirepo.net> - 1:1.10.7-1
+- update PEAR to 1.10.7
+
+* Thu Aug 23 2018 Remi Collet <remi@remirepo.net> - 1:1.10.6-1
+- update PEAR to 1.10.6
+
+* Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.5-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
+
+* Wed Apr 11 2018 Remi Collet <remi@remirepo.net> - 1:1.10.5-8
+- require /usr/bin/gpg instead of gnupg
+
+* Tue Mar  6 2018 Remi Collet <remi@remirepo.net> - 1:1.10.5-7
+- enable autoloader only in Fedora
+
+* Tue Feb 13 2018 Remi Collet <remi@remirepo.net> - 1:1.10.5-6
+- add patch for PHP 7.2 from
+  https://github.com/pear/pear-core/pull/71
+
+* Fri Feb 09 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.5-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
+
+* Tue Dec 19 2017 Remi Collet <remi@remirepo.net> - 1:1.10.5-4
+- add autoloader for each package
+
 * Thu Jun 29 2017 Remi Collet <remi@remirepo.net> - 1:1.10.5-2
 - update XML_Util to 1.4.3 (no change)
 
