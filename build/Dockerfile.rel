@@ -1,6 +1,7 @@
 ARG centos=7
+ARG buildrepo=php7build
 
-FROM aursu/php7build:${centos}-build-rel
+FROM aursu/${buildrepo}:${centos}-build-rel
 
 RUN yum -y --enablerepo custom install \
         php7-pear \
