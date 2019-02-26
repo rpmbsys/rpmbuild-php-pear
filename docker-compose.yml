@@ -8,7 +8,7 @@ services:
       context: .
       args:
         centos: 6
-    image: aursu/pearbuild:el6
+    image: aursu/php7build:6-pear
   centos6pearbuildphp7rel:
     command: ["-ba", "--with", "relocation"]
     volumes:
@@ -19,14 +19,14 @@ services:
       args:
         centos: 6
         image: build-rel
-    image: aursu/pearbuild:6-rel
+    image: aursu/php7build:6-pear-rel
   centos7pearbuildphp7:
     volumes:
       - rpms:/home/centos/rpmbuild/SRPMS
       - rpm7:/home/centos/rpmbuild/RPMS
     build:
       context: .
-    image: aursu/pearbuild:el7
+    image: aursu/php7build:7-pear
   centos7pearbuildphp7rel:
     command: ["-ba", "--with", "relocation"]
     volumes:
@@ -36,7 +36,7 @@ services:
       context: .
       args:
         image: build-rel
-    image: aursu/pearbuild:7-rel
+    image: aursu/php7build:7-pear-rel
 
 volumes:
   rpms:
