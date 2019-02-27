@@ -23,9 +23,12 @@ jobs:
             git submodule sync
             git submodule update --init
       - run:
-          name: Start docker services for rpmbuild
+          name: Pull images for RPM build docker services
           command: |
             docker-compose -f rpmbuild/docker-compose.yml pull
+      - run:
+          name: Start docker services for rpmbuild
+          command: |
             docker-compose -f rpmbuild/docker-compose.yml up -d
           background: true
           no_output_timeout: 2h
@@ -50,12 +53,12 @@ jobs:
             docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm \
               -e BINTRAY_USER=$BINTRAY_USER \
               -e BINTRAY_API_KEY=$BINTRAY_API_KEY \
-              -e BINTRAY_REPO=$BINTRAY_REPO \
+              -e BINTRAY_REPO=custom \
               -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos7bintray
             docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm \
               -e BINTRAY_USER=$BINTRAY_USER \
               -e BINTRAY_API_KEY=$BINTRAY_API_KEY \
-              -e BINTRAY_REPO=$BINTRAY_REPO \
+              -e BINTRAY_REPO=custom \
               -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos6bintray
       - run:
           name: Build PHP-PEAR Dcoker build images
@@ -63,19 +66,14 @@ jobs:
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             sleep 30
             docker-compose -f build/docker-compose.yml build --no-cache --pull
-            docker push aursu/pearbuild:7-build
-            docker push aursu/pearbuild:7-build-rel
-            docker push aursu/pearbuild:6-build
-            docker push aursu/pearbuild:6-build-rel
-      - store_artifacts:
-          path: ~/el6/RPMS
-      - store_artifacts:
-          path: ~/el7/RPMS
+            docker push aursu/pearbuild:7-php-7.1
+            docker push aursu/pearbuild:7-php-7.1-rel
+            docker push aursu/pearbuild:6-php-7.1
+            docker push aursu/pearbuild:6-php-7.1-rel
   build5:
     machine:
       docker_layer_caching: true
     environment:
-      BINTRAY_REPO: php5custom
       PACKAGE_VCS_URL: https://github.com/aursu/rpmbuild-php-pear
     steps:
       - run:
@@ -95,9 +93,12 @@ jobs:
             git submodule sync
             git submodule update --init
       - run:
-          name: Start docker services for rpmbuild
+          name: Pull images for RPM build docker services
           command: |
             docker-compose -f rpmbuild/docker-compose.yml pull
+      - run:
+          name: Start docker services for rpmbuild
+          command: |
             docker-compose -f rpmbuild/docker-compose.yml up -d
           background: true
           no_output_timeout: 2h
@@ -122,12 +123,12 @@ jobs:
             docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm \
               -e BINTRAY_USER=$BINTRAY_USER \
               -e BINTRAY_API_KEY=$BINTRAY_API_KEY \
-              -e BINTRAY_REPO=$BINTRAY_REPO \
+              -e BINTRAY_REPO=php5custom \
               -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos7bintray
             docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm \
               -e BINTRAY_USER=$BINTRAY_USER \
               -e BINTRAY_API_KEY=$BINTRAY_API_KEY \
-              -e BINTRAY_REPO=$BINTRAY_REPO \
+              -e BINTRAY_REPO=php5custom \
               -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos6bintray
       - run:
           name: Build PHP-PEAR Docker build images
@@ -135,10 +136,8 @@ jobs:
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             sleep 30
             docker-compose -f build/docker-compose.php5.yml build --no-cache --pull
-            docker push aursu/pearbuild:7-build-php5
-            docker push aursu/pearbuild:6-build-php5
-      - store_artifacts:
-          path: ~/php5
+            docker push aursu/pearbuild:7-php-5.6
+            docker push aursu/pearbuild:6-php-5.6
 workflows:
   version: 2
   pearbuild:

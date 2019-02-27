@@ -1,7 +1,8 @@
 ARG centos=7
+ARG repo=php7build
 ARG image=build
 
-FROM aursu/php7build:${centos}-${image}
+FROM aursu/${repo}:${centos}-${image}
 
 COPY SOURCES ${BUILD_TOPDIR}/SOURCES
 COPY SPECS ${BUILD_TOPDIR}/SPECS
