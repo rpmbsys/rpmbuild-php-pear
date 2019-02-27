@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build:
+  build7:
     machine:
       docker_layer_caching: true
     environment:
@@ -67,9 +67,9 @@ jobs:
             sleep 30
             docker-compose -f build/docker-compose.yml build --no-cache --pull
             docker push aursu/pearbuild:7-php-7.1
-            docker push aursu/pearbuild:7-php-7.1-rel
+            docker push aursu/pearbuild:7-php7-7.1
             docker push aursu/pearbuild:6-php-7.1
-            docker push aursu/pearbuild:6-php-7.1-rel
+            docker push aursu/pearbuild:6-php7-7.1
   build5:
     machine:
       docker_layer_caching: true
@@ -143,4 +143,4 @@ workflows:
   pearbuild:
     jobs:
       - build5
-      - build
+      - build7
