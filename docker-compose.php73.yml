@@ -10,6 +10,7 @@ services:
         buildrepo: php73build
     image: aursu/php73build:7-php-pear
   centos7pearbuildphp73rel:
+    command: ["-ba", "--with", "relocation"]
     volumes:
       - rpms:/home/centos/rpmbuild/SRPMS
       - rpm7:/home/centos/rpmbuild/RPMS
