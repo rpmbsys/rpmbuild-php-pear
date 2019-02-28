@@ -8,7 +8,6 @@ services:
       context: .
       args:
         buildrepo: php73build
-    image: aursu/php73build:7-php-pear
   centos7pearbuildphp73rel:
     command: ["-ba", "--with", "relocation"]
     volumes:
@@ -19,7 +18,6 @@ services:
       args:
         buildrepo: php73build
         image: build-rel
-    image: aursu/php73build:7-php7-pear
 
 volumes:
   rpms:
