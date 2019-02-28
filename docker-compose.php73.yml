@@ -1,0 +1,26 @@
+version: "3.5"
+services:
+  centos7pearbuildphp73:
+    volumes:
+      - rpms:/home/centos/rpmbuild/SRPMS
+      - rpm7:/home/centos/rpmbuild/RPMS
+    build:
+      context: .
+      args:
+        buildrepo: php73build
+    image: aursu/php73build:7-php-pear
+  centos7pearbuildphp73rel:
+    volumes:
+      - rpms:/home/centos/rpmbuild/SRPMS
+      - rpm7:/home/centos/rpmbuild/RPMS
+    build:
+      context: .
+      args:
+        buildrepo: php73build
+    image: aursu/php73build:7-php7-pear
+
+volumes:
+  rpms:
+    name: rpms
+  rpm7:
+    name: rpm7

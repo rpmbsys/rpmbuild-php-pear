@@ -37,6 +37,15 @@ services:
       args:
         image: build-rel
     image: aursu/php7build:7-php7-pear
+  centos7pearbuildphp73:
+    volumes:
+      - rpms:/home/centos/rpmbuild/SRPMS
+      - rpm7:/home/centos/rpmbuild/RPMS
+    build:
+      context: .
+      args:
+        repo: php73build
+    image: aursu/php73build:7-php-pear
 
 volumes:
   rpms:
