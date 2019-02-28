@@ -18,6 +18,7 @@ services:
       context: .
       args:
         buildrepo: php73build
+        image: build-rel
     image: aursu/php73build:7-php7-pear
 
 volumes:
