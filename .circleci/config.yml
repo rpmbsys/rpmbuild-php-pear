@@ -26,10 +26,11 @@ jobs:
           name: Pull images for RPM build docker services
           command: |
             docker-compose -f rpmbuild/docker-compose.yml pull
+            docker-compose -f rpmbuild/docker-compose.bintray.yml pull
+            docker-compose -f rpmbuild/docker-compose.refresh.yml pull
       - run:
           name: Start docker services for rpmbuild
-          command: |
-            docker-compose -f rpmbuild/docker-compose.yml up -d
+          command: docker-compose -f rpmbuild/docker-compose.yml up -d
           background: true
           no_output_timeout: 2h
       - run:
@@ -53,11 +54,17 @@ jobs:
               -e BINTRAY_REPO=custom \
               -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos6bintray
       - run:
-          name: Build PHP-PEAR Dcoker build images
+          name: refresh repositories
+          command: |
+            docker-compose -f rpmbuild/docker-compose.refresh.yml run --rm centos7refresh
+            docker-compose -f rpmbuild/docker-compose.refresh.yml run --rm centos6refresh
+      - run:
+          name: Build PHP-PEAR build Docker images
+          command: docker-compose -f build/docker-compose.yml build --no-cache --pull
+      - run:
+          name: Upload PHP-PEAR build Docker images
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
-            sleep 30
-            docker-compose -f build/docker-compose.yml build --no-cache --pull
             docker push aursu/pearbuild:7-php-7.1
             docker push aursu/pearbuild:7-php7-7.1
             docker push aursu/pearbuild:6-php-7.1
@@ -88,10 +95,11 @@ jobs:
           name: Pull images for RPM build docker services
           command: |
             docker-compose -f rpmbuild/docker-compose.yml pull
+            docker-compose -f rpmbuild/docker-compose.bintray.yml pull
+            docker-compose -f rpmbuild/docker-compose.refresh.yml pull
       - run:
           name: Start docker services for rpmbuild
-          command: |
-            docker-compose -f rpmbuild/docker-compose.yml up -d
+          command: docker-compose -f rpmbuild/docker-compose.yml up -d
           background: true
           no_output_timeout: 2h
       - run:
@@ -115,11 +123,17 @@ jobs:
               -e BINTRAY_REPO=php5custom \
               -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos6bintray
       - run:
-          name: Build PHP-PEAR Docker build images
+          name: refresh repositories
+          command: |
+            docker-compose -f rpmbuild/docker-compose.refresh.yml run --rm centos7refresh
+            docker-compose -f rpmbuild/docker-compose.refresh.yml run --rm centos6refresh
+      - run:
+          name: Build PHP-PEAR build Docker images
+          command: docker-compose -f build/docker-compose.php5.yml build --no-cache --pull
+      - run:
+          name: Upload PHP-PEAR build Docker images
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
-            sleep 30
-            docker-compose -f build/docker-compose.php5.yml build --no-cache --pull
             docker push aursu/pearbuild:7-php-5.6
             docker push aursu/pearbuild:6-php-5.6
   build73:
@@ -170,11 +184,15 @@ jobs:
               -e BINTRAY_REPO=php73custom \
               -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos7bintray
       - run:
-          name: Build PHP-PEAR Docker build images
+          name: refresh repositories
+          command: docker-compose -f rpmbuild/docker-compose.refresh.yml run --rm centos7refresh
+      - run:
+          name: Build PHP-PEAR build Docker images
+          command: docker-compose -f build/docker-compose.php73.yml build --no-cache --pull
+      - run:
+          name: Upload PHP-PEAR build Docker images
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
-            sleep 30
-            docker-compose -f build/docker-compose.php73.yml build --no-cache --pull
             docker push aursu/pearbuild:7-php-7.3
             docker push aursu/pearbuild:7-php7-7.3
 
