@@ -4,6 +4,7 @@ jobs:
     machine:
       docker_layer_caching: true
     environment:
+      BINTRAY_REPO: php71custom
       PACKAGE_VCS_URL: https://github.com/aursu/rpmbuild-php-pear
     steps:
       - run:
@@ -14,7 +15,7 @@ jobs:
       - run:
           name: Upgrade Docker Compose
           command: |
-            sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+            sudo curl -L https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
             sudo chmod +x /usr/local/bin/docker-compose
       - checkout
       - run:
@@ -46,12 +47,12 @@ jobs:
             docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm \
               -e BINTRAY_USER=$BINTRAY_USER \
               -e BINTRAY_API_KEY=$BINTRAY_API_KEY \
-              -e BINTRAY_REPO=custom \
+              -e BINTRAY_REPO=$BINTRAY_REPO \
               -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos7bintray
             docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm \
               -e BINTRAY_USER=$BINTRAY_USER \
               -e BINTRAY_API_KEY=$BINTRAY_API_KEY \
-              -e BINTRAY_REPO=custom \
+              -e BINTRAY_REPO=$BINTRAY_REPO \
               -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos6bintray
       - run:
           name: refresh repositories
@@ -83,7 +84,7 @@ jobs:
       - run:
           name: Upgrade Docker Compose
           command: |
-            sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+            sudo curl -L https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
             sudo chmod +x /usr/local/bin/docker-compose
       - checkout
       - run:
@@ -115,12 +116,12 @@ jobs:
             docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm \
               -e BINTRAY_USER=$BINTRAY_USER \
               -e BINTRAY_API_KEY=$BINTRAY_API_KEY \
-              -e BINTRAY_REPO=php5custom \
+              -e BINTRAY_REPO=$BINTRAY_REPO \
               -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos7bintray
             docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm \
               -e BINTRAY_USER=$BINTRAY_USER \
               -e BINTRAY_API_KEY=$BINTRAY_API_KEY \
-              -e BINTRAY_REPO=php5custom \
+              -e BINTRAY_REPO=$BINTRAY_REPO \
               -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos6bintray
       - run:
           name: refresh repositories
@@ -150,7 +151,7 @@ jobs:
       - run:
           name: Upgrade Docker Compose
           command: |
-            sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+            sudo curl -L https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
             sudo chmod +x /usr/local/bin/docker-compose
       - checkout
       - run:
@@ -181,7 +182,7 @@ jobs:
             docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm \
               -e BINTRAY_USER=$BINTRAY_USER \
               -e BINTRAY_API_KEY=$BINTRAY_API_KEY \
-              -e BINTRAY_REPO=php73custom \
+              -e BINTRAY_REPO=$BINTRAY_REPO \
               -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos7bintray
       - run:
           name: refresh repositories
