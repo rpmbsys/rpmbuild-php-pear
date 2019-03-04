@@ -41,7 +41,7 @@ services:
     build:
       context: .
       args:
-        repo: php73build
+        buildrepo: php73build
 
 volumes:
   rpms:
