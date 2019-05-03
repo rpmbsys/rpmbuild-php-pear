@@ -34,14 +34,6 @@ services:
       context: .
       args:
         image: build-rel
-  centos7pearbuildphp73:
-    volumes:
-      - rpms:/home/centos/rpmbuild/SRPMS
-      - rpm7:/home/centos/rpmbuild/RPMS
-    build:
-      context: .
-      args:
-        buildrepo: php73build
 
 volumes:
   rpms:
