@@ -1,24 +1,5 @@
 version: "3.5"
 services:
-  centos6pearbuildphp7:
-    networks:
-      - buildnet
-    build:
-      context: .
-      args:
-        centos: 6
-      network: buildnet
-    image: aursu/pearbuild:6-php-7.1
-  centos6pearbuildphp7rel:
-    networks:
-      - buildnet
-    build:
-      context: .
-      dockerfile: Dockerfile.rel
-      args:
-        centos: 6
-      network: buildnet
-    image: aursu/pearbuild:6-php7-7.1
   centos7pearbuildphp7:
     networks:
       - buildnet

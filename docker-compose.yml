@@ -1,24 +1,5 @@
 version: "3.5"
 services:
-  centos6pearbuildphp7:
-    volumes:
-      - rpms:/home/centos/rpmbuild/SRPMS
-      - rpm6:/home/centos/rpmbuild/RPMS
-    build:
-      context: .
-      args:
-        centos: 6
-  centos6pearbuildphp7rel:
-    command: ["-ba", "--with", "relocation"]
-    volumes:
-      - rpms:/home/centos/rpmbuild/SRPMS
-      - rpm6:/home/centos/rpmbuild/RPMS
-    build:
-      context: .
-      args:
-        centos: 6
-        image: build-rel
-    image: aursu/php7build:6-php7-pear
   centos7pearbuildphp7:
     volumes:
       - rpms:/home/centos/rpmbuild/SRPMS
@@ -38,7 +19,5 @@ services:
 volumes:
   rpms:
     name: rpms
-  rpm6:
-    name: rpm6
   rpm7:
     name: rpm7
