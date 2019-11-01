@@ -15,6 +15,25 @@ services:
       dockerfile: Dockerfile.rel
       network: buildnet
     image: aursu/pearbuild:7-php7-7.1
+  centos8pearbuildphp7:
+    networks:
+      - buildnet
+    build:
+      context: .
+      args:
+        centos: 8
+      network: buildnet
+    image: aursu/pearbuild:8-php-7.1
+  centos8pearbuildphp7rel:
+    networks:
+      - buildnet
+    build:
+      context: .
+      args:
+        centos: 8
+      dockerfile: Dockerfile.rel
+      network: buildnet
+    image: aursu/pearbuild:8-php7-7.1
 
 networks:
   buildnet:

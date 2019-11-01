@@ -19,6 +19,27 @@ services:
         buildrepo: php73build
       network: buildnet
     image: aursu/pearbuild:7-php7-7.3
+  centos8pearbuildphp73:
+    networks:
+      - buildnet
+    build:
+      context: .
+      args:
+        centos: 8
+        buildrepo: php73build
+      network: buildnet
+    image: aursu/pearbuild:8-php-7.3
+  centos8pearbuildphp7rel:
+    networks:
+      - buildnet
+    build:
+      context: .
+      dockerfile: Dockerfile.rel
+      args:
+        centos: 8
+        buildrepo: php73build
+      network: buildnet
+    image: aursu/pearbuild:8-php7-7.3
 
 networks:
   buildnet:

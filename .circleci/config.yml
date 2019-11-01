@@ -39,11 +39,16 @@ jobs:
               -e BINTRAY_API_KEY=$BINTRAY_API_KEY \
               -e BINTRAY_REPO=$BINTRAY_REPO \
               -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos7bintray
+            docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm \
+              -e BINTRAY_USER=$BINTRAY_USER \
+              -e BINTRAY_API_KEY=$BINTRAY_API_KEY \
+              -e BINTRAY_REPO=$BINTRAY_REPO \
+              -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos8bintray
       - run:
           name: refresh repositories
           command: |
             docker-compose -f rpmbuild/docker-compose.refresh.yml run --rm centos7refresh
-            docker-compose -f rpmbuild/docker-compose.refresh.yml run --rm centos6refresh
+            docker-compose -f rpmbuild/docker-compose.refresh.yml run --rm centos8refresh
       - run:
           name: Build PHP-PEAR build Docker images
           command: docker-compose -f build/docker-compose.yml build --no-cache --pull
@@ -53,6 +58,8 @@ jobs:
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             docker push aursu/pearbuild:7-php-7.1
             docker push aursu/pearbuild:7-php7-7.1
+            docker push aursu/pearbuild:8-php-7.1
+            docker push aursu/pearbuild:8-php7-7.1
   build73:
     machine:
       image: ubuntu-1604:201903-01
@@ -91,9 +98,16 @@ jobs:
               -e BINTRAY_API_KEY=$BINTRAY_API_KEY \
               -e BINTRAY_REPO=$BINTRAY_REPO \
               -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos7bintray
+            docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm \
+              -e BINTRAY_USER=$BINTRAY_USER \
+              -e BINTRAY_API_KEY=$BINTRAY_API_KEY \
+              -e BINTRAY_REPO=$BINTRAY_REPO \
+              -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos8bintray
       - run:
           name: refresh repositories
-          command: docker-compose -f rpmbuild/docker-compose.refresh.yml run --rm centos7refresh
+          command: |
+            docker-compose -f rpmbuild/docker-compose.refresh.yml run --rm centos7refresh
+            docker-compose -f rpmbuild/docker-compose.refresh.yml run --rm centos8refresh
       - run:
           name: Build PHP-PEAR build Docker images
           command: docker-compose -f build/docker-compose.php73.yml build --no-cache --pull
@@ -103,6 +117,8 @@ jobs:
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             docker push aursu/pearbuild:7-php-7.3
             docker push aursu/pearbuild:7-php7-7.3
+            docker push aursu/pearbuild:8-php-7.3
+            docker push aursu/pearbuild:8-php7-7.3
 
 workflows:
   version: 2

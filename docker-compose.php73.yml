@@ -18,6 +18,26 @@ services:
       args:
         buildrepo: php73build
         image: build-rel
+  centos8pearbuildphp73:
+    volumes:
+      - rpms:/home/centos/rpmbuild/SRPMS
+      - rpm8:/home/centos/rpmbuild/RPMS
+    build:
+      context: .
+      args:
+        centos: 8
+        buildrepo: php73build
+  centos8pearbuildphp73rel:
+    command: ["-ba", "--with", "relocation"]
+    volumes:
+      - rpms:/home/centos/rpmbuild/SRPMS
+      - rpm8:/home/centos/rpmbuild/RPMS
+    build:
+      context: .
+      args:
+        centos: 8
+        buildrepo: php73build
+        image: build-rel
 
 volumes:
   rpms:
