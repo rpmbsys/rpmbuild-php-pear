@@ -46,6 +46,10 @@ deploy:
 jobs:
   include:
     - stage: docker
+      before_install:
+        - docker-compose -f rpmbuild/docker-compose.yml pull webrepo
+      install:
+        - docker-compose -f rpmbuild/docker-compose.yml up -d webrepo
       script:
         - docker-compose -f build/php71/docker-compose.yml build --no-cache --pull
       before_deploy:
@@ -56,6 +60,10 @@ jobs:
         on:
           all_branches: true
     - stage: docker
+      before_install:
+        - docker-compose -f rpmbuild/docker-compose.yml pull webrepo
+      install:
+        - docker-compose -f rpmbuild/docker-compose.yml up -d webrepo
       script:
         - docker-compose -f build/php73/docker-compose.yml build --no-cache --pull
       before_deploy:
