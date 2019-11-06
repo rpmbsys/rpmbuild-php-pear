@@ -10,26 +10,33 @@ addons:
 
 env:
   global:
+    - PROJECT=pearbuild
     - DOCKER_COMPOSE_VERSION=1.24.1
     - PACKAGE_VCS_URL=https://github.com/aursu/rpmbuild-php-geoip
   jobs:
-    - BUILD_COMPOSE_FILE=docker-compose.yml       BINTRAY_REPO=php71custom BUILD=centos7pearbuildphp7     UPLOADER=centos7bintray
-    - BUILD_COMPOSE_FILE=docker-compose.yml       BINTRAY_REPO=php71custom BUILD=centos7pearbuildphp7rel  UPLOADER=centos7bintray
-    - BUILD_COMPOSE_FILE=docker-compose.yml       BINTRAY_REPO=php71custom BUILD=centos8pearbuildphp7     UPLOADER=centos8bintray
-    - BUILD_COMPOSE_FILE=docker-compose.yml       BINTRAY_REPO=php71custom BUILD=centos8pearbuildphp7rel  UPLOADER=centos8bintray
-    - BUILD_COMPOSE_FILE=docker-compose.php73.yml BINTRAY_REPO=php73custom BUILD=centos7pearbuildphp73    UPLOADER=centos7bintray
-    - BUILD_COMPOSE_FILE=docker-compose.php73.yml BINTRAY_REPO=php73custom BUILD=centos7pearbuildphp73rel UPLOADER=centos7bintray
-    - BUILD_COMPOSE_FILE=docker-compose.php73.yml BINTRAY_REPO=php73custom BUILD=centos8pearbuildphp73    UPLOADER=centos8bintray
-    - BUILD_COMPOSE_FILE=docker-compose.php73.yml BINTRAY_REPO=php73custom BUILD=centos8pearbuildphp73rel UPLOADER=centos8bintray
+    - PHP=php71 OS=centos7 BINTRAY_REPO=php71custom BUILD=centos7pearbuildphp71    UPLOADER=centos7bintray
+    - PHP=php71 OS=centos7 BINTRAY_REPO=php71custom BUILD=centos7pearbuildphp71rel UPLOADER=centos7bintray
+    - PHP=php71 OS=centos8 BINTRAY_REPO=php71custom BUILD=centos8pearbuildphp71    UPLOADER=centos8bintray
+    - PHP=php71 OS=centos8 BINTRAY_REPO=php71custom BUILD=centos8pearbuildphp71rel UPLOADER=centos8bintray
+    - PHP=php73 OS=centos7 BINTRAY_REPO=php73custom BUILD=centos7pearbuildphp73    UPLOADER=centos7bintray
+    - PHP=php73 OS=centos7 BINTRAY_REPO=php73custom BUILD=centos7pearbuildphp73rel UPLOADER=centos7bintray
+    - PHP=php73 OS=centos8 BINTRAY_REPO=php73custom BUILD=centos8pearbuildphp73    UPLOADER=centos8bintray
+    - PHP=php73 OS=centos8 BINTRAY_REPO=php73custom BUILD=centos8pearbuildphp73rel UPLOADER=centos8bintray
 
 before_install:
   - sudo curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
   - sudo chmod +x /usr/local/bin/docker-compose
+  - |
+    export REPOSERVICE=${OS}repo
+    docker-compose -f rpmbuild/docker-compose.yml pull ${REPOSERVICE} webrepo
 
-install: skip
+install:
+  - docker-compose -f rpmbuild/docker-compose.yml up -d
 
 before_script:
-  - docker-compose -f ${BUILD_COMPOSE_FILE} build --no-cache ${BUILD}
+  - |
+    export BUILD_COMPOSE_FILE=docker-compose.${PHP}.yml
+    docker-compose -f ${BUILD_COMPOSE_FILE} build --no-cache ${BUILD}
 
 script:
   - docker-compose -f ${BUILD_COMPOSE_FILE} up ${BUILD}
@@ -43,27 +50,18 @@ deploy:
   on:
     all_branches: true
 
-cache:
-  directories:
-    - /var/lib/docker/volumes
-
 jobs:
   include:
     - stage: docker
-      cache:
-        directories:
-          - /var/lib/docker/volumes
+      env:
       before_install:
-        - docker-compose -f rpmbuild/docker-compose.yml pull
+
       install:
-        - docker-compose -f rpmbuild/docker-compose.yml up -d
+
       script:
-        - docker-compose -f build/docker-compose.yml build --no-cache --pull
+
       after_success: docker image ls
     - stage: docker
-      cache:
-        directories:
-          - /var/lib/docker/volumes
       before_install:
         - docker-compose -f rpmbuild/docker-compose.yml pull
       install:
