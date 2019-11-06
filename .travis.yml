@@ -10,64 +10,56 @@ addons:
 
 env:
   global:
-    - PROJECT=pearbuild
     - DOCKER_COMPOSE_VERSION=1.24.1
     - PACKAGE_VCS_URL=https://github.com/aursu/rpmbuild-php-geoip
   jobs:
-    - PHP=php71 OS=centos7
-    - PHP=php71 OS=centos8
-    - PHP=php73 OS=centos7
-    - PHP=php73 OS=centos8
+    - BUILD_COMPOSE_FILE=docker-compose.yml       BINTRAY_REPO=php71custom BUILD=centos7pearbuildphp7     UPLOADER=centos7bintray
+    - BUILD_COMPOSE_FILE=docker-compose.yml       BINTRAY_REPO=php71custom BUILD=centos7pearbuildphp7rel  UPLOADER=centos7bintray
+    - BUILD_COMPOSE_FILE=docker-compose.yml       BINTRAY_REPO=php71custom BUILD=centos8pearbuildphp7     UPLOADER=centos8bintray
+    - BUILD_COMPOSE_FILE=docker-compose.yml       BINTRAY_REPO=php71custom BUILD=centos8pearbuildphp7rel  UPLOADER=centos8bintray
+    - BUILD_COMPOSE_FILE=docker-compose.php73.yml BINTRAY_REPO=php73custom BUILD=centos7pearbuildphp73    UPLOADER=centos7bintray
+    - BUILD_COMPOSE_FILE=docker-compose.php73.yml BINTRAY_REPO=php73custom BUILD=centos7pearbuildphp73rel UPLOADER=centos7bintray
+    - BUILD_COMPOSE_FILE=docker-compose.php73.yml BINTRAY_REPO=php73custom BUILD=centos8pearbuildphp73    UPLOADER=centos8bintray
+    - BUILD_COMPOSE_FILE=docker-compose.php73.yml BINTRAY_REPO=php73custom BUILD=centos8pearbuildphp73rel UPLOADER=centos8bintray
 
 before_install:
   - sudo curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
   - sudo chmod +x /usr/local/bin/docker-compose
-  - |
-    export REPOSERVICE=${OS}repo
-    docker-compose -f rpmbuild/docker-compose.yml pull ${REPOSERVICE} webrepo
 
-install:
-  - |
-    export REPOSERVICE=${OS}repo
-    docker-compose -f rpmbuild/docker-compose.yml up -d ${REPOSERVICE} webrepo
+install: skip
 
 before_script:
-  - |
-    export BUILD_COMPOSE_FILE=docker-compose.${PHP}.yml
-    export BUILDSERVICE=${OS}${PROJECT}${PHP}${BUILD}
-    docker-compose -f ${BUILD_COMPOSE_FILE} build --no-cache ${BUILDSERVICE}
+  - docker-compose -f ${BUILD_COMPOSE_FILE} build --no-cache ${BUILD}
 
 script:
-  - |
-    export BUILD_COMPOSE_FILE=docker-compose.${PHP}.yml
-    export BUILDSERVICE=${OS}${PROJECT}${PHP}
-    docker-compose -f ${BUILD_COMPOSE_FILE} up ${BUILDSERVICE}
+  - docker-compose -f ${BUILD_COMPOSE_FILE} up ${BUILD}
 
 before_deploy:
-  - |
-    export UPLOADER=${OS}bintray
-    docker-compose -f rpmbuild/docker-compose.bintray.yml pull ${UPLOADER}
+  - docker-compose -f rpmbuild/docker-compose.bintray.yml pull ${UPLOADER}
 
 deploy:
   provider: script
-  script: |
-    export BINTRAY_REPO=${PHP}custom
-    export UPLOADER=${OS}bintray
-    docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm -e BINTRAY_USER=$BINTRAY_USER -e BINTRAY_API_KEY=$BINTRAY_API_KEY -e BINTRAY_REPO=$BINTRAY_REPO -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL ${UPLOADER}
+  script: docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm -e BINTRAY_USER=$BINTRAY_USER -e BINTRAY_API_KEY=$BINTRAY_API_KEY -e BINTRAY_REPO=$BINTRAY_REPO -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL ${UPLOADER}
   on:
     all_branches: true
 
 jobs:
   include:
-    - stage: test
-    - stage: test
-      before_script:
-        - |
-          export BUILD_COMPOSE_FILE=docker-compose.${PHP}.yml
-          export BUILDSERVICE=${OS}${PROJECT}${PHP}rel
-          docker-compose -f ${BUILD_COMPOSE_FILE} build --no-cache ${BUILDSERVICE}
+    - stage: docker
+      before_install:
+        - docker-compose -f rpmbuild/docker-compose.yml pull
+      install:
+        - docker-compose -f rpmbuild/docker-compose.yml up -d
       script:
-        - |
-          export BUILD_COMPOSE_FILE=docker-compose.${PHP}.yml
-          export BUILDSERVICE=${OS}${PROJECT}${PHP}rel
-          docker-compose -f ${BUILD_COMPOSE_FILE} up ${BUILDSERVICE}
+        - docker-compose -f build/docker-compose.yml build --no-cache --pull
+      before_deploy:
+        - docker login -u $DOCKER_USER -p $DOCKER_PASS
+      deploy:
+        provider: script
+        script: |
+            docker push aursu/pearbuild:7-php-7.1
+            docker push aursu/pearbuild:7-php7-7.1
+            docker push aursu/pearbuild:8-php-7.1
+            docker push aursu/pearbuild:8-php7-7.1
+        on:
+          all_branches: true
