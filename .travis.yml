@@ -51,15 +51,25 @@ jobs:
       install:
         - docker-compose -f rpmbuild/docker-compose.yml up -d
       script:
-        - docker-compose -f build/docker-compose.yml build --no-cache --pull
+        - docker-compose -f build/php71/docker-compose.yml build --no-cache --pull
       before_deploy:
         - docker login -u $DOCKER_USER -p $DOCKER_PASS
       deploy:
         provider: script
-        script: |
-            docker push aursu/pearbuild:7-php-7.1
-            docker push aursu/pearbuild:7-php7-7.1
-            docker push aursu/pearbuild:8-php-7.1
-            docker push aursu/pearbuild:8-php7-7.1
+        script: docker-compose -f build/php71/docker-compose.yml push
+        on:
+          all_branches: true
+    - stage: docker
+      before_install:
+        - docker-compose -f rpmbuild/docker-compose.yml pull
+      install:
+        - docker-compose -f rpmbuild/docker-compose.yml up -d
+      script:
+        - docker-compose -f build/php73/docker-compose.yml build --no-cache --pull
+      before_deploy:
+        - docker login -u $DOCKER_USER -p $DOCKER_PASS
+      deploy:
+        provider: script
+        script: docker-compose -f build/php73/docker-compose.yml push
         on:
           all_branches: true

@@ -51,7 +51,7 @@ jobs:
             docker-compose -f rpmbuild/docker-compose.refresh.yml run --rm centos8refresh
       - run:
           name: Build PHP-PEAR build Docker images
-          command: docker-compose -f build/docker-compose.yml build --no-cache --pull
+          command: docker-compose -f build/php71/docker-compose.yml build --no-cache --pull
       - run:
           name: Upload PHP-PEAR build Docker images
           command: |
@@ -110,7 +110,7 @@ jobs:
             docker-compose -f rpmbuild/docker-compose.refresh.yml run --rm centos8refresh
       - run:
           name: Build PHP-PEAR build Docker images
-          command: docker-compose -f build/docker-compose.php73.yml build --no-cache --pull
+          command: docker-compose -f build/php73/docker-compose.yml build --no-cache --pull
       - run:
           name: Upload PHP-PEAR build Docker images
           command: |
