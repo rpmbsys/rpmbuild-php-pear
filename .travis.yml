@@ -47,9 +47,9 @@ jobs:
   include:
     - stage: docker
       before_install:
-        - docker-compose -f rpmbuild/docker-compose.yml pull webrepo
+        - docker-compose -f rpmbuild/docker-compose.yml pull  centos7repo centos8repo webrepo
       install:
-        - docker-compose -f rpmbuild/docker-compose.yml up -d webrepo
+        - docker-compose -f rpmbuild/docker-compose.yml up -d centos7repo centos8repo webrepo
       script:
         - docker-compose -f build/php71/docker-compose.yml build --no-cache --pull
       before_deploy:
@@ -61,9 +61,9 @@ jobs:
           all_branches: true
     - stage: docker
       before_install:
-        - docker-compose -f rpmbuild/docker-compose.yml pull webrepo
+        - docker-compose -f rpmbuild/docker-compose.yml pull  centos7repo centos8repo webrepo
       install:
-        - docker-compose -f rpmbuild/docker-compose.yml up -d webrepo
+        - docker-compose -f rpmbuild/docker-compose.yml up -d  centos7repo centos8repo webrepo
       script:
         - docker-compose -f build/php73/docker-compose.yml build --no-cache --pull
       before_deploy:
