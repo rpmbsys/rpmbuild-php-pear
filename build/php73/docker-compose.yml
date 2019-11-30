@@ -9,7 +9,7 @@ services:
         buildrepo: php73build
       network: buildnet
     image: aursu/pearbuild:7-php-7.3
-  centos7pearbuildphp7rel:
+  centos7pearbuildphp73rel:
     networks:
       - buildnet
     build:
@@ -29,7 +29,7 @@ services:
         buildrepo: php73build
       network: buildnet
     image: aursu/pearbuild:8-php-7.3
-  centos8pearbuildphp7rel:
+  centos8pearbuildphp73rel:
     networks:
       - buildnet
     build:

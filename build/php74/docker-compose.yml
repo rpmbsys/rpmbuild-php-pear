@@ -1,0 +1,26 @@
+version: "3.5"
+services:
+  centos7pearbuildphp74:
+    networks:
+      - buildnet
+    build:
+      context: .
+      args:
+        buildrepo: php74build
+      network: buildnet
+    image: aursu/pearbuild:7-php-7.4
+  centos8pearbuildphp74:
+    networks:
+      - buildnet
+    build:
+      context: .
+      args:
+        centos: 8
+        buildrepo: php73build
+      network: buildnet
+    image: aursu/pearbuild:8-php-7.4
+
+networks:
+  buildnet:
+    external: true
+    name: buildnet

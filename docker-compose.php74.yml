@@ -1,0 +1,27 @@
+version: "3.5"
+services:
+  centos7pearbuildphp74:
+    volumes:
+      - rpms:/home/centos/rpmbuild/SRPMS
+      - rpm7:/home/centos/rpmbuild/RPMS
+    build:
+      context: .
+      args:
+        buildrepo: php74build
+  centos8pearbuildphp74:
+    volumes:
+      - rpms:/home/centos/rpmbuild/SRPMS
+      - rpm8:/home/centos/rpmbuild/RPMS
+    build:
+      context: .
+      args:
+        centos: 8
+        buildrepo: php74build
+
+volumes:
+  rpms:
+    name: rpms
+  rpm7:
+    name: rpm7
+  rpm8:
+    name: rpm8
