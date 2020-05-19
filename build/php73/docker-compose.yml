@@ -1,47 +1,32 @@
 version: "3.5"
 services:
   centos7pearbuildphp73:
-    networks:
-      - buildnet
     build:
       context: .
       args:
         buildrepo: php73build
-      network: buildnet
-    image: aursu/pearbuild:7-php-7.3
+        centos: $OS7
+    image: aursu/pearbuild:${OS7}-php-7.3
   centos7pearbuildphp73rel:
-    networks:
-      - buildnet
     build:
       context: .
       dockerfile: Dockerfile.rel
       args:
         buildrepo: php73build
-      network: buildnet
-    image: aursu/pearbuild:7-php7-7.3
+        centos: $OS7
+    image: aursu/pearbuild:${OS7}-php7-7.3
   centos8pearbuildphp73:
-    networks:
-      - buildnet
     build:
       context: .
       args:
-        centos: 8
+        centos: $OS8
         buildrepo: php73build
-      network: buildnet
-    image: aursu/pearbuild:8-php-7.3
+    image: aursu/pearbuild:${OS8}-php-7.3
   centos8pearbuildphp73rel:
-    networks:
-      - buildnet
     build:
       context: .
       dockerfile: Dockerfile.rel
       args:
-        centos: 8
+        centos: $OS8
         buildrepo: php73build
-      network: buildnet
-    image: aursu/pearbuild:8-php7-7.3
-
-networks:
-  buildnet:
-    external: true
-    name: buildnet
+    image: aursu/pearbuild:${OS8}-php7-7.3

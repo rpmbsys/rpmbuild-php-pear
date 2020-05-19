@@ -7,6 +7,7 @@ services:
     build:
       context: .
       args:
+        centos: $OS7
         buildrepo: php73build
   centos7pearbuildphp73rel:
     command: ["-ba", "--with", "relocation"]
@@ -16,6 +17,7 @@ services:
     build:
       context: .
       args:
+        centos: $OS7
         buildrepo: php73build
         image: build-rel
   centos8pearbuildphp73:
@@ -25,7 +27,7 @@ services:
     build:
       context: .
       args:
-        centos: 8
+        centos: $OS8
         buildrepo: php73build
   centos8pearbuildphp73rel:
     command: ["-ba", "--with", "relocation"]
@@ -35,7 +37,7 @@ services:
     build:
       context: .
       args:
-        centos: 8
+        centos: $OS8
         buildrepo: php73build
         image: build-rel
 

@@ -1,4 +1,4 @@
-ARG centos=7
+ARG centos=7.8.2003
 
 FROM aursu/php74build:${centos}-build
 
