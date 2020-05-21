@@ -1,128 +1,114 @@
-version: 2
-jobs:
-  build71:
-    machine:
-      image: ubuntu-1604:201903-01
-    environment:
-      BINTRAY_REPO: php71custom
-      PACKAGE_VCS_URL: https://github.com/aursu/rpmbuild-php-pear
-    steps:
-      - checkout
-      - run:
-          name: Git submodules sync
-          command: |
-            git submodule sync
-            git submodule update --init
-      - run:
-          name: Pull images for RPM build docker services
-          command: |
-            docker-compose -f rpmbuild/docker-compose.yml pull
-            docker-compose -f rpmbuild/docker-compose.bintray.yml pull
-            docker-compose -f rpmbuild/docker-compose.refresh.yml pull
-      - run:
-          name: Start docker services for rpmbuild
-          command: docker-compose -f rpmbuild/docker-compose.yml up -d
-          background: true
-          no_output_timeout: 2h
-      - run:
-          name: Build PHP-PEAR Docker images
-          command: docker-compose build --no-cache --pull
-      - run:
-          name: Build PHP-PEAR RPM packages
-          command: docker-compose up
-      - run:
-          name: Upload RPM packages into Bintray
-          command: |
-            docker-compose -f rpmbuild/docker-compose.bintray.yml pull
-            docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm \
-              -e BINTRAY_USER=$BINTRAY_USER \
-              -e BINTRAY_API_KEY=$BINTRAY_API_KEY \
-              -e BINTRAY_REPO=$BINTRAY_REPO \
-              -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos7bintray
-            docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm \
-              -e BINTRAY_USER=$BINTRAY_USER \
-              -e BINTRAY_API_KEY=$BINTRAY_API_KEY \
-              -e BINTRAY_REPO=$BINTRAY_REPO \
-              -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos8bintray
-      - run:
-          name: refresh repositories
-          command: |
-            docker-compose -f rpmbuild/docker-compose.refresh.yml run --rm centos7refresh
-            docker-compose -f rpmbuild/docker-compose.refresh.yml run --rm centos8refresh
-      - run:
-          name: Build PHP-PEAR build Docker images
-          command: docker-compose -f build/php71/docker-compose.yml build --no-cache --pull
-      - run:
-          name: Upload PHP-PEAR build Docker images
-          command: |
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker push aursu/pearbuild:7-php-7.1
-            docker push aursu/pearbuild:7-php7-7.1
-            docker push aursu/pearbuild:8-php-7.1
-            docker push aursu/pearbuild:8-php7-7.1
-  build73:
-    machine:
-      image: ubuntu-1604:201903-01
-    environment:
-      BINTRAY_REPO: php73custom
-      PACKAGE_VCS_URL: https://github.com/aursu/rpmbuild-php-pear
-    steps:
-      - checkout
-      - run:
-          name: Git submodules sync
-          command: |
-            git submodule sync
-            git submodule update --init
-      - run:
-          name: Pull images for RPM build docker services
-          command: |
-            docker-compose -f rpmbuild/docker-compose.yml pull
-      - run:
-          name: Start docker services for rpmbuild
-          command: |
-            docker-compose -f rpmbuild/docker-compose.yml up -d
-          background: true
-          no_output_timeout: 2h
-      - run:
-          name: Build PHP-PEAR Docker images
-          command: docker-compose -f docker-compose.php73.yml build --no-cache --pull
-      - run:
-          name: Build PHP-PEAR RPM packages
-          command: docker-compose -f docker-compose.php73.yml up
-      - run:
-          name: Upload RPM packages into Bintray
-          command: |
-            docker-compose -f rpmbuild/docker-compose.bintray.yml pull
-            docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm \
-              -e BINTRAY_USER=$BINTRAY_USER \
-              -e BINTRAY_API_KEY=$BINTRAY_API_KEY \
-              -e BINTRAY_REPO=$BINTRAY_REPO \
-              -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos7bintray
-            docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm \
-              -e BINTRAY_USER=$BINTRAY_USER \
-              -e BINTRAY_API_KEY=$BINTRAY_API_KEY \
-              -e BINTRAY_REPO=$BINTRAY_REPO \
-              -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos8bintray
-      - run:
-          name: refresh repositories
-          command: |
-            docker-compose -f rpmbuild/docker-compose.refresh.yml run --rm centos7refresh
-            docker-compose -f rpmbuild/docker-compose.refresh.yml run --rm centos8refresh
-      - run:
-          name: Build PHP-PEAR build Docker images
-          command: docker-compose -f build/php73/docker-compose.yml build --no-cache --pull
-      - run:
-          name: Upload PHP-PEAR build Docker images
-          command: |
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker push aursu/pearbuild:7-php-7.3
-            docker push aursu/pearbuild:7-php7-7.3
-            docker push aursu/pearbuild:8-php-7.3
-            docker push aursu/pearbuild:8-php7-7.3
+version: 2.1
+
+orbs:
+  docker-rpmbuild: aursu/rpmbuild@1.1.0
 
 workflows:
-  version: 2
   pearbuild:
     jobs:
-      - build71
-      - build73
+      - docker-rpmbuild/build:
+          name: centos7pearbuildphp7rpm
+          build_service: centos7pearbuildphp7
+          bintray_uploader: centos7bintray
+      - docker-rpmbuild/build:
+          name: centos7pearbuildphp7relrpm
+          build_service: centos7pearbuildphp7rel
+          bintray_uploader: centos7bintray
+      - docker-rpmbuild/build:
+          name: centos8pearbuildphp7rpm
+          build_service: centos8pearbuildphp7
+          bintray_uploader: centos8bintray
+      - docker-rpmbuild/build:
+          name: centos8pearbuildphp7rel
+          build_service: centos8pearbuildphp7rel
+          bintray_uploader: centos8bintray
+      - docker-rpmbuild/build:
+          name: centos7pearbuildphp73rpm
+          build_file: docker-compose.php73.yml
+          build_service: centos7pearbuildphp73
+          bintray_uploader: centos7bintray
+      - docker-rpmbuild/build:
+          name: centos7pearbuildphp73relrpm
+          build_file: docker-compose.php73.yml
+          build_service: centos7pearbuildphp73rel
+          bintray_uploader: centos7bintray
+      - docker-rpmbuild/build:
+          name: centos8pearbuildphp73rpm
+          build_file: docker-compose.php73.yml
+          build_service: centos8pearbuildphp73
+          bintray_uploader: centos8bintray
+      - docker-rpmbuild/build:
+          name: centos8pearbuildphp73relrpm
+          build_file: docker-compose.php73.yml
+          build_service: centos8pearbuildphp73rel
+          bintray_uploader: centos8bintray
+      - docker-rpmbuild/build:
+          name: centos7pearbuildphp74rpm
+          build_file: docker-compose.php74.yml
+          build_service: centos7pearbuildphp74
+          bintray_uploader: centos7bintray
+      - docker-rpmbuild/build:
+          name: centos8pearbuildphp74rpm
+          build_file: docker-compose.php74.yml
+          build_service: centos8pearbuildphp74
+          bintray_uploader: centos8bintray
+      - docker-rpmbuild/image:
+          name: centos7pearbuildphp7
+          compose_file: build/php71/docker-compose.yml
+          build_service: centos7pearbuildphp7
+          requires:
+            - centos7pearbuildphp7rpm
+      - docker-rpmbuild/image:
+          name: centos7pearbuildphp7rel
+          compose_file: build/php71/docker-compose.yml
+          build_service: centos7pearbuildphp7rel
+          requires:
+            - centos7pearbuildphp7relrpm
+      - docker-rpmbuild/image:
+          name: centos8pearbuildphp7
+          compose_file: build/php71/docker-compose.yml
+          build_service: centos8pearbuildphp7
+          requires:
+            - centos8pearbuildphp7rpm
+      - docker-rpmbuild/image:
+          name: centos8pearbuildphp7rel
+          compose_file: build/php71/docker-compose.yml
+          build_service: centos8pearbuildphp7rel
+          requires:
+            - centos8pearbuildphp7relrpm
+      - docker-rpmbuild/image:
+          name: centos7pearbuildphp73
+          compose_file: build/php73/docker-compose.yml
+          build_service: centos7pearbuildphp73
+          requires:
+            - centos7pearbuildphp73rpm
+      - docker-rpmbuild/image:
+          name: centos7pearbuildphp73rel
+          compose_file: build/php73/docker-compose.yml
+          build_service: centos7pearbuildphp73rel
+          requires:
+            - centos7pearbuildphp73relrpm
+      - docker-rpmbuild/image:
+          name: centos8pearbuildphp73
+          compose_file: build/php73/docker-compose.yml
+          build_service: centos8pearbuildphp73
+          requires:
+            - centos8pearbuildphp73rpm
+      - docker-rpmbuild/image:
+          name: centos8pearbuildphp73rel
+          compose_file: build/php73/docker-compose.yml
+          build_service: centos8pearbuildphp73rel
+          requires:
+            - centos8pearbuildphp73relrpm
+      - docker-rpmbuild/image:
+          name: centos7pearbuildphp74
+          compose_file: build/php74/docker-compose.yml
+          build_service: centos7pearbuildphp74
+          requires:
+            - centos7pearbuildphp74rpm
+      - docker-rpmbuild/image:
+          name: centos8pearbuildphp74
+          compose_file: build/php74/docker-compose.yml
+          build_service: centos8pearbuildphp74
+          requires:
+            - centos8pearbuildphp74rpm
