@@ -1,4 +1,4 @@
-ARG centos=7
+ARG centos=7.8.2003
 ARG buildrepo=php7build
 ARG image=build
 
