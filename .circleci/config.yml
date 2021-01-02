@@ -1,27 +1,11 @@
 version: 2.1
 
 orbs:
-  docker-rpmbuild: aursu/rpmbuild@1.1.1
+  docker-rpmbuild: aursu/rpmbuild@1.1.2
 
 workflows:
   pearbuild:
     jobs:
-      - docker-rpmbuild/build:
-          name: centos7pearbuildphp7rpm
-          build_service: centos7pearbuildphp7
-          bintray_uploader: centos7bintray
-      - docker-rpmbuild/build:
-          name: centos7pearbuildphp7relrpm
-          build_service: centos7pearbuildphp7rel
-          bintray_uploader: centos7bintray
-      - docker-rpmbuild/build:
-          name: centos8pearbuildphp7rpm
-          build_service: centos8pearbuildphp7
-          bintray_uploader: centos8bintray
-      - docker-rpmbuild/build:
-          name: centos8pearbuildphp7rel
-          build_service: centos8pearbuildphp7rel
-          bintray_uploader: centos8bintray
       - docker-rpmbuild/build:
           name: centos7pearbuildphp73rpm
           build_file: docker-compose.php73.yml
@@ -44,38 +28,24 @@ workflows:
           bintray_uploader: centos8bintray
       - docker-rpmbuild/build:
           name: centos7pearbuildphp74rpm
-          build_file: docker-compose.php74.yml
+          build_file: docker-compose.yml
           build_service: centos7pearbuildphp74
           bintray_uploader: centos7bintray
       - docker-rpmbuild/build:
           name: centos8pearbuildphp74rpm
-          build_file: docker-compose.php74.yml
+          build_file: docker-compose.yml
           build_service: centos8pearbuildphp74
           bintray_uploader: centos8bintray
-      - docker-rpmbuild/image:
-          name: centos7pearbuildphp7
-          compose_file: build/php71/docker-compose.yml
-          build_service: centos7pearbuildphp7
-          requires:
-            - centos7pearbuildphp7rpm
-      - docker-rpmbuild/image:
-          name: centos7pearbuildphp7rel
-          compose_file: build/php71/docker-compose.yml
-          build_service: centos7pearbuildphp7rel
-          requires:
-            - centos7pearbuildphp7relrpm
-      - docker-rpmbuild/image:
-          name: centos8pearbuildphp7
-          compose_file: build/php71/docker-compose.yml
-          build_service: centos8pearbuildphp7
-          requires:
-            - centos8pearbuildphp7rpm
-      - docker-rpmbuild/image:
-          name: centos8pearbuildphp7rel
-          compose_file: build/php71/docker-compose.yml
-          build_service: centos8pearbuildphp7rel
-          requires:
-            - centos8pearbuildphp7relrpm
+      - docker-rpmbuild/build:
+          name: centos7pearbuildphp80rpm
+          build_file: docker-compose.php80.yml
+          build_service: centos7pearbuildphp80
+          bintray_uploader: centos7bintray
+      - docker-rpmbuild/build:
+          name: centos8pearbuildphp80rpm
+          build_file: docker-compose.php80.yml
+          build_service: centos8pearbuildphp80
+          bintray_uploader: centos8bintray
       - docker-rpmbuild/image:
           name: centos7pearbuildphp73
           compose_file: build/php73/docker-compose.yml
@@ -112,3 +82,15 @@ workflows:
           build_service: centos8pearbuildphp74
           requires:
             - centos8pearbuildphp74rpm
+      - docker-rpmbuild/image:
+          name: centos7pearbuildphp80
+          compose_file: build/php80/docker-compose.yml
+          build_service: centos7pearbuildphp80
+          requires:
+            - centos7pearbuildphp80rpm
+      - docker-rpmbuild/image:
+          name: centos8pearbuildphp80
+          compose_file: build/php80/docker-compose.yml
+          build_service: centos8pearbuildphp80
+          requires:
+            - centos8pearbuildphp80rpm

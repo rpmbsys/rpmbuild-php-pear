@@ -1,14 +1,14 @@
 version: "3.5"
 services:
-  centos7pearbuildphp74:
+  centos7pearbuildphp80:
     build:
       context: .
       args:
         centos: $OS7
-    image: aursu/pearbuild:${OS7}-php-7.4
-  centos8pearbuildphp74:
+    image: aursu/pearbuild:${OS7}-php-8.0
+  centos8pearbuildphp80:
     build:
       context: .
       args:
         centos: $OS8
-    image: aursu/pearbuild:${OS8}-php-7.4
+    image: aursu/pearbuild:${OS8}-php-8.0

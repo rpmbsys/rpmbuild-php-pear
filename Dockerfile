@@ -1,5 +1,5 @@
-ARG centos=7.8.2003
-ARG buildrepo=php7build
+ARG centos=7.9.2009
+ARG buildrepo=php74build
 ARG image=build
 
 FROM aursu/${buildrepo}:${centos}-${image}

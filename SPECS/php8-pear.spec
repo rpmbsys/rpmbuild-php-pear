@@ -5,47 +5,8 @@
 #
 # Please preserve changelog entries
 #
-
-%global with_relocation 0%{?_with_relocation:1}
-
-
-%if %{with_relocation}
-%global program_suffix      7
-%global main_name           php7
-%global php_sysconfdir      %{_sysconfdir}/php7
-%global php_datadir         %{_datadir}/php7
-%global php_sharedstatedir  %{_sharedstatedir}/php7
-%global php_docdir          %{_docdir}/php7
-%global pear_cachedir       %{_localstatedir}/cache/php7-pear
-%global pear_sharedstatedir %{php_sharedstatedir}/pear
-%global pear_datadir        %{php_datadir}
-%global tests_datadir       %{php_datadir}/tests
-%global bin_cli             php%{program_suffix}
-%global bin_pecl            pecl%{program_suffix}
-%global bin_pear            pear%{program_suffix}
-%global bin_peardev         peardev%{program_suffix}
-%else
-%global main_name           php
-%global php_sysconfdir      %{_sysconfdir}
-%global php_datadir         %{_datadir}/php
-%global php_sharedstatedir  %{_sharedstatedir}/php
-%global php_docdir          %{_docdir}
-%global pear_cachedir       %{_localstatedir}/cache/php-pear
-%global pear_sharedstatedir %{_sharedstatedir}/pear
-%global pear_datadir        %{_datadir}
-%global tests_datadir       %{_datadir}/tests
-%global bin_cli             php
-%global bin_pecl            pecl
-%global bin_pear            pear
-%global bin_peardev         peardev
-%endif
-
-%global pear_name           %{main_name}-pear
-%global cli_name            %{main_name}-cli
-%global xml_name            %{main_name}-xml
-%global devel_name          %{main_name}-devel
-%global peardir             %{pear_datadir}/pear
-%global metadir             %{pear_sharedstatedir}
+%global peardir %{_datadir}/pear
+%global metadir %{_localstatedir}/lib/pear
 
 %global getoptver 1.4.3
 %global arctarver 1.4.11
@@ -61,34 +22,25 @@
 
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
-%{!?pecl_xmldir: %global pecl_xmldir %{php_sharedstatedir}/peclxml}
+%{!?pecl_xmldir: %global pecl_xmldir %{_sharedstatedir}/php/peclxml}
 
 Summary: PHP Extension and Application Repository framework
-Name: %{pear_name}
+Name: php-pear
 Version: 1.10.12
-Release: 2%{?dist}
+Release: 4%{?dist}
 Epoch: 1
 # PEAR, PEAR_Manpages, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv3+
 License: BSD and LGPLv3+
-Group: Development/Languages
 URL: http://pear.php.net/package/PEAR
 Source0: http://download.pear.php.net/package/PEAR-%{version}%{?pearprever}.tgz
 # wget https://raw.githubusercontent.com/pear/pear-core/stable/install-pear.php
 Source1: install-pear.php
-
 Source3: cleanup.php
 Source10: pear.sh
 Source11: pecl.sh
 Source12: peardev.sh
 Source13: macros.pear.php7
-
-Source103: php7-cleanup.php
-Source110: php7-pear.sh
-Source111: php7-pecl.sh
-Source112: php7-peardev.sh
-Source113: php7-macros.pear
-
 Source21: http://pear.php.net/get/Archive_Tar-%{arctarver}.tgz
 Source22: http://pear.php.net/get/Console_Getopt-%{getoptver}.tgz
 Source23: http://pear.php.net/get/Structures_Graph-%{structver}.tgz
@@ -96,13 +48,12 @@ Source24: http://pear.php.net/get/XML_Util-%{xmlutil}.tgz
 Source25: http://pear.php.net/get/PEAR_Manpages-%{manpages}.tgz
 
 BuildArch: noarch
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: php(language) >= 7
-BuildRequires: %{cli_name}
-BuildRequires: %{xml_name}
+BuildRequires: php(language) >= 8
+BuildRequires: php-cli
+BuildRequires: php-xml
 BuildRequires: %{_bindir}/gpg
 # For pecl_xmldir macro
-BuildRequires: %{devel_name}
+BuildRequires: php-devel
 %if %{with_tests}
 BuildRequires:  %{_bindir}/phpunit
 %endif
@@ -130,43 +81,33 @@ Provides: php-autoloader(pear/structures_graph) = %{structver}
 Provides: php-autoloader(pear/xml_util) = %{xmlutil}
 %endif
 
-# Archive_Tar requires 5.2
-# XML_Util, Structures_Graph require 5.3
-# Console_Getopt requires 5.4
-# PEAR requires 5.4
-Requires: php(language) >= 7
-Requires: %{cli_name}
+
+Requires:  php(language) >= 8
+Requires:  php-cli >= 8
 # phpci detected extension
 # PEAR (date, spl always builtin):
-Requires: php-ftp >= 7
-Requires: php-pcre >= 7
-Requires: php-posix >= 7
-Requires: php-tokenizer >= 7
-Requires: %{xml_name}
-Requires: php-zlib >= 7
+Requires:  php-ftp >= 8
+Requires:  php-pcre >= 8
+Requires:  php-posix >= 8
+Requires:  php-tokenizer >= 8
+Requires:  php-xml >= 8
+Requires:  php-zlib >= 8
 # Console_Getopt: pcre
 # Archive_Tar: pcre, posix, zlib
-Requires: php-bz2 >= 7
+Requires:  php-bz2 >= 8
 # Structures_Graph: none
 # XML_Util: pcre
 # optional: overload and xdebug
+# for /var/www/html ownership
+Requires: httpd-filesystem
 %if 0%{?fedora}
 Requires: php-composer(fedora/autoloader)
 %endif
 
+
 %description
 PEAR is a framework and distribution system for reusable PHP
 components.  This package contains the basic PEAR components.
-
-%package -n php-pear-doc
-Summary: Documentation for %{name}
-Group: Documentation
-Requires: %{name} = %{version}-%{release}
-BuildArch: noarch
-Conflicts: php-pear
-
-%description -n php-pear-doc
-Documentation for %{name}.
 
 %prep
 %setup -cT
@@ -179,7 +120,7 @@ do
     [ -f LICENSE ] && mv LICENSE LICENSE-${file%%-*}
     [ -f README ]  && mv README  README-${file%%-*}
 
-    tar xzf $archive --wildcards 'package*xml'
+    tar xzf $archive 'package*xml'
     [ -f package2.xml ] && mv package2.xml ${file%%-*}.xml \
                         || mv package.xml  ${file%%-*}.xml
 done
@@ -190,11 +131,8 @@ cp %{SOURCE1} .
 
 sed -e 's:@BINDIR@:%{_bindir}:' \
     -e 's:@LIBDIR@:%{_localstatedir}/lib:' \
-%if %{with_relocation}
-    %{SOURCE113} > macros.pear
-%else
     %{SOURCE13} > macros.pear
-%endif
+
 
 %build
 %if 0%{?fedora}
@@ -223,69 +161,58 @@ phpab --template fedora \
       XML
 %endif
 
-%install
-rm -rf %{buildroot}
 
-export PHP_PEAR_SYSCONF_DIR=%{php_sysconfdir}
-export PHP_PEAR_SIG_KEYDIR=%{php_sysconfdir}/pearkeys
+%install
+export PHP_PEAR_SYSCONF_DIR=%{_sysconfdir}
+export PHP_PEAR_SIG_KEYDIR=%{_sysconfdir}/pearkeys
 export PHP_PEAR_SIG_BIN=%{_bindir}/gpg
 export PHP_PEAR_INSTALL_DIR=%{peardir}
 
 # 1.4.11 tries to write to the cache directory during installation
 # so it's not possible to set a sane default via the environment.
 # The ${PWD} bit will be stripped via relocate.php later.
-export PHP_PEAR_CACHE_DIR=${PWD}%{pear_cachedir}
+export PHP_PEAR_CACHE_DIR=${PWD}%{_localstatedir}/cache/php-pear
 export PHP_PEAR_TEMP_DIR=/var/tmp
 
 install -d %{buildroot}%{peardir} \
-           %{buildroot}%{pear_cachedir} \
+           %{buildroot}%{_localstatedir}/cache/php-pear \
            %{buildroot}%{_localstatedir}/www/html \
-           %{buildroot}%{pear_sharedstatedir}/pkgxml \
-           %{buildroot}%{php_sysconfdir}/pear
+           %{buildroot}%{_localstatedir}/lib/pear/pkgxml \
+           %{buildroot}%{_sysconfdir}/pear
 
 export INSTALL_ROOT=%{buildroot}
 
-%{_bindir}/%{bin_cli} --version
+%{_bindir}/php --version
 
-%{_bindir}/%{bin_cli} -dmemory_limit=64M -dshort_open_tag=0 -dsafe_mode=0 \
+%{_bindir}/php -dmemory_limit=64M -dshort_open_tag=0 -dsafe_mode=0 \
          -d 'error_reporting=E_ALL&~E_DEPRECATED' -ddetect_unicode=0 \
          install-pear.php --force \
                  --dir      %{peardir} \
-                 --cache    %{pear_cachedir} \
-                 --config   %{php_sysconfdir}/pear \
+                 --cache    %{_localstatedir}/cache/php-pear \
+                 --config   %{_sysconfdir}/pear \
                  --bin      %{_bindir} \
                  --www      %{_localstatedir}/www/html \
-                 --doc      %{php_docdir}/pear \
-                 --test     %{tests_datadir}/pear \
-                 --data     %{pear_datadir}/pear-data \
+                 --doc      %{_docdir}/pear \
+                 --test     %{_datadir}/tests/pear \
+                 --data     %{_datadir}/pear-data \
                  --metadata %{metadir} \
                  --man      %{_mandir} \
-                 --php      %{_bindir}/%{bin_cli} \
                  %{SOURCE0} %{SOURCE21} %{SOURCE22} %{SOURCE23} %{SOURCE24} %{SOURCE25}
 
 # Replace /usr/bin/* with simple scripts:
-%if %{with_relocation}
-install -m 755 %{SOURCE110} %{buildroot}%{_bindir}/%{bin_pear}
-install -m 755 %{SOURCE111} %{buildroot}%{_bindir}/%{bin_pecl}
-install -m 755 %{SOURCE112} %{buildroot}%{_bindir}/%{bin_peardev}
-%{_bindir}/%{bin_cli} %{SOURCE103} %{buildroot}%{php_sysconfdir}/pear.conf %{_datadir}
-%else
-install -m 755 %{SOURCE10} %{buildroot}%{_bindir}/%{bin_pear}
-install -m 755 %{SOURCE11} %{buildroot}%{_bindir}/%{bin_pecl}
-install -m 755 %{SOURCE12} %{buildroot}%{_bindir}/%{bin_peardev}
-%{_bindir}/%{bin_cli} %{SOURCE3} %{buildroot}%{php_sysconfdir}/pear.conf %{_datadir}
-%endif
+install -m 755 %{SOURCE10} %{buildroot}%{_bindir}/pear
+install -m 755 %{SOURCE11} %{buildroot}%{_bindir}/pecl
+install -m 755 %{SOURCE12} %{buildroot}%{_bindir}/peardev
+
+# Sanitize the pear.conf
+%{_bindir}/php %{SOURCE3} %{buildroot}%{_sysconfdir}/pear.conf %{_datadir}
 
 # Display configuration for debug
-%{_bindir}/%{bin_cli} -r "print_r(unserialize(substr(file_get_contents('%{buildroot}%{php_sysconfdir}/pear.conf'),17)));"
+%{_bindir}/php -r "print_r(unserialize(substr(file_get_contents('%{buildroot}%{_sysconfdir}/pear.conf'),17)));"
 
-%if %{with_relocation}
-install -m 644 -D macros.pear \
-           %{buildroot}%{macrosdir}/macros.pear7
-%else
+
 install -m 644 -D macros.pear \
            %{buildroot}%{macrosdir}/macros.pear
-%endif
 
 # apply patches on installed PEAR tree
 pushd %{buildroot}%{peardir}
@@ -296,7 +223,7 @@ popd
 rm -rf %{buildroot}/.depdb* %{buildroot}/.lock %{buildroot}/.channels %{buildroot}/.filemap
 
 # Need for re-registrying XML_Util
-install -m 644 *.xml %{buildroot}%{pear_sharedstatedir}/pkgxml
+install -m 644 *.xml %{buildroot}%{_localstatedir}/lib/pear/pkgxml
 
 %if 0%{?fedora}
 # install autoloaders
@@ -305,37 +232,37 @@ do install -Dpm 644 $i %{buildroot}%{peardir}/$i
 done
 %endif
 
+
 %check
 # Check that no bogus paths are left in the configuration, or in
 # the generated registry files.
-grep %{buildroot} %{buildroot}%{php_sysconfdir}/pear.conf && exit 1
-grep %{_libdir} %{buildroot}%{php_sysconfdir}/pear.conf && exit 1
-grep '"/tmp"' %{buildroot}%{php_sysconfdir}/pear.conf && exit 1
-grep /usr/local %{buildroot}%{php_sysconfdir}/pear.conf && exit 1
+grep %{buildroot} %{buildroot}%{_sysconfdir}/pear.conf && exit 1
+grep %{_libdir} %{buildroot}%{_sysconfdir}/pear.conf && exit 1
+grep '"/tmp"' %{buildroot}%{_sysconfdir}/pear.conf && exit 1
+grep /usr/local %{buildroot}%{_sysconfdir}/pear.conf && exit 1
 grep -rl %{buildroot} %{buildroot} && exit 1
 
 
 %if %{with_tests}
-cp %{php_sysconfdir}/php.ini .
-echo "include_path=.:%{buildroot}%{peardir}:%{php_sharedstatedir}" >>php.ini
+cp /etc/php.ini .
+echo "include_path=.:%{buildroot}%{peardir}:/usr/share/php" >>php.ini
 export PHPRC=$PWD/php.ini
 LOG=$PWD/rpmlog
 ret=0
 
-cd %{buildroot}%{tests_datadir}/pear/Structures_Graph/tests
+cd %{buildroot}%{_datadir}/tests/pear/Structures_Graph/tests
 phpunit \
    AllTests || ret=1
 
-cd %{buildroot}%{tests_datadir}/pear/XML_Util/tests
-%{_bindir}/%{bin_cli} \
-   %{buildroot}%{pear_sharedstatedir}/pearcmd.php \
-   run-tests --ini="-d include_path=.:%{buildroot}%{peardir}:%{php_sharedstatedir}" \
-   | tee $LOG
+cd %{buildroot}%{_datadir}/tests/pear/XML_Util/tests
+phpunit \
+   --bootstrap=/usr/share/pear/XML/Util/autoload.php \
+   --test-suffix .php . || ret=1
 
-cd %{buildroot}%{tests_datadir}/pear/Console_Getopt/tests
-%{_bindir}/%{bin_cli} \
-   %{buildroot}%{pear_sharedstatedir}/pearcmd.php \
-   run-tests --ini="-d include_path=.:%{buildroot}%{peardir}:%{php_sharedstatedir}" \
+cd %{buildroot}%{_datadir}/tests/pear/Console_Getopt/tests
+%{_bindir}/php \
+   %{buildroot}/usr/share/pear/pearcmd.php \
+   run-tests \
    | tee -a $LOG
 
 grep "FAILED TESTS" $LOG && ret=1
@@ -345,62 +272,36 @@ exit $ret
 echo 'Test suite disabled (missing "--with tests" option)'
 %endif
 
-%clean
-rm -rf %{buildroot}
+# Register newly installed PECL packages
+%transfiletriggerin -- %{pecl_xmldir}
+while read file; do
+  %{_bindir}/pecl install --nodeps --soft --force --register-only --nobuild "$file" >/dev/null || :
+done
 
-%pre
-# Manage relocation of metadata, before update to pear
-if [ -d %{peardir}/.registry -a ! -d %{metadir}/.registry ]; then
-  mkdir -p %{metadir}
-  mv -f %{peardir}/.??* %{metadir}
-fi
+# Unregister to be removed PECL packages
+# Reading the xml file to retrieve channel and package name
+%transfiletriggerun -- %{pecl_xmldir}
+%{_bindir}/php -r '
+while ($file=fgets(STDIN)) {
+  $file = trim($file);
+  $xml = simplexml_load_file($file);
+  if (isset($xml->channel) &&  isset($xml->name)) {
+    printf("%s/%s\n", $xml->channel, $xml->name);
+  } else {
+    fputs(STDERR, "Bad pecl package file ($file)\n");
+  }
+}' | while read  name; do
+  %{_bindir}/pecl uninstall --nodeps --ignore-errors --register-only "$name" >/dev/null || :
+done
 
-%post
-# force new value as pear.conf is (noreplace)
-current=$(%{_bindir}/%{bin_pear} config-get test_dir system)
-if [ "$current" != "%{tests_datadir}/pear" ]; then
-%{_bindir}/%{bin_pear} config-set \
-    test_dir %{tests_datadir}/pear \
-    system >/dev/null || :
-fi
-
-current=$(%{_bindir}/%{bin_pear} config-get data_dir system)
-if [ "$current" != "%{pear_datadir}/pear-data" ]; then
-%{_bindir}/%{bin_pear} config-set \
-    data_dir %{pear_datadir}/pear-data \
-    system >/dev/null || :
-fi
-
-current=$(%{_bindir}/%{bin_pear} config-get metadata_dir system)
-if [ "$current" != "%{metadir}" ]; then
-%{_bindir}/%{bin_pear} config-set \
-    metadata_dir %{metadir} \
-    system >/dev/null || :
-fi
-
-current=$(%{_bindir}/%{bin_pear} config-get -c pecl doc_dir system)
-if [ "$current" != "%{php_docdir}/pecl" ]; then
-%{_bindir}/%{bin_pear} config-set \
-    -c pecl \
-    doc_dir %{php_docdir}/pecl \
-    system >/dev/null || :
-fi
-
-current=$(%{_bindir}/%{bin_pear} config-get -c pecl test_dir system)
-if [ "$current" != "%{tests_datadir}/pecl" ]; then
-%{_bindir}/%{bin_pear} config-set \
-    -c pecl \
-    test_dir %{tests_datadir}/pecl \
-    system >/dev/null || :
-fi
 
 %postun
 if [ $1 -eq 0 -a -d %{metadir}/.registry ] ; then
   rm -rf %{metadir}/.registry
 fi
 
+
 %files
-%defattr(-,root,root,-)
 %{peardir}
 %dir %{metadir}
 %{metadir}/.channels
@@ -410,35 +311,22 @@ fi
 %verify(not mtime)          %{metadir}/.lock
 %{metadir}/.registry
 %{metadir}/pkgxml
-%{_bindir}/%{bin_pear}
-%{_bindir}/%{bin_pecl}
-%{_bindir}/%{bin_peardev}
-%config(noreplace) %{php_sysconfdir}/pear.conf
-%if %{with_relocation}
-%{macrosdir}/macros.pear7
-%else
+%{_bindir}/*
+%config(noreplace) %{_sysconfdir}/pear.conf
 %{macrosdir}/macros.pear
-%endif
-%dir %{pear_cachedir}
-%dir %{php_sysconfdir}/pear
-%{!?_licensedir:%global license %%doc}
+%dir %{_localstatedir}/cache/php-pear
+%dir %{_sysconfdir}/pear
 %license LICENSE*
-%{tests_datadir}/pear
-%{pear_datadir}/pear-data
-%dir %{php_docdir}/pear
-%doc %{php_docdir}/pear/*
-%if %{with_relocation}
-%exclude %{_bindir}/pear
-%exclude %{_bindir}/peardev
-%exclude %{_bindir}/pecl
-%endif
-
-%files -n php-pear-doc
 %doc README*
+%dir %{_docdir}/pear
+%doc %{_docdir}/pear/*
+%{_datadir}/tests/pear
+%{_datadir}/pear-data
 %{_mandir}/man1/pear.1*
 %{_mandir}/man1/pecl.1*
 %{_mandir}/man1/peardev.1*
 %{_mandir}/man5/pear.conf.5*
+
 
 %changelog
 * Mon Nov 23 2020 Remi Collet <remi@remirepo.net> - 1:1.10.12-4
@@ -447,13 +335,37 @@ fi
 * Wed Sep 16 2020 Remi Collet <remi@remirepo.net> - 1:1.10.12-3
 - update Archive_Tar to 1.4.10
 
-* Sun Jun 28 2020 Alexander Ursu <alexander.ursu@gmail.com> - 1:1.10.12-2
-- Build for CentOS 8.2
+* Tue Jul 28 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.12-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
 
-* Mon Apr 20 2020 Remi Collet <remi@remirepo.net> - 1:1.10.12-1
+* Mon Apr 20 2020 Remi Collet <remi@remirepo.net> - 1.10.12-1
 - update PEAR to 1.10.12
 - update XML_Util to 1.4.5
+- drop patch merged upstream
+
+* Tue Apr 14 2020 Remi Collet <remi@remirepo.net> - 1.10.11-1
+- update to 1.10.11
+- drop patch merged upstream
+
+* Mon Mar 30 2020 Remi Collet <remi@remirepo.net> - 1:1.10.10-7
+- add patch for PEAR and PHP 7.4 from
+  https://github.com/pear/pear-core/pull/103
+
+* Thu Jan 30 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.10-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
+
+* Thu Dec 12 2019 Remi Collet <remi@remirepo.net> - 1:1.10.10-5
+- add patch for XML_Util and PHP 7.4 from
+  https://github.com/pear/XML_Util/pull/12
+
+* Fri Dec  6 2019 Remi Collet <remi@remirepo.net> - 1:1.10.10-4
+- update XML_Util to 1.4.4
+- drop patch merged upstream
+
+* Thu Dec  5 2019 Remi Collet <remi@remirepo.net> - 1:1.10.10-3
 - update Archive_Tar to 1.4.9
+- add patch for XML_Util and PHP 7.4 from
+  https://github.com/pear/XML_Util/pull/11
 
 * Thu Nov 21 2019 Remi Collet <remi@remirepo.net> - 1:1.10.10-2
 - update Console_Getopt to 1.4.3
@@ -461,6 +373,9 @@ fi
 
 * Wed Nov 20 2019 Remi Collet <remi@remirepo.net> - 1:1.10.10-1
 - update PEAR to 1.10.10
+
+* Tue Nov 19 2019 Remi Collet <remi@remirepo.net> - 1:1.10.9-5
+- add upstream patches for PHP 7.4
 
 * Tue Oct 22 2019 Remi Collet <remi@remirepo.net> - 1:1.10.9-4
 - update Archive_Tar to 1.4.8
@@ -518,6 +433,9 @@ fi
 * Tue Dec 19 2017 Remi Collet <remi@remirepo.net> - 1:1.10.5-4
 - add autoloader for each package
 
+* Thu Jul 27 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.5-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
+
 * Thu Jun 29 2017 Remi Collet <remi@remirepo.net> - 1:1.10.5-2
 - update XML_Util to 1.4.3 (no change)
 
@@ -529,6 +447,9 @@ fi
 
 * Thu Apr 27 2017 Remi Collet <remi@remirepo.net> 1:1.10.4-1
 - update PEAR to 1.10.4
+
+* Thu Mar  9 2017 Remi Collet <remi@fedoraproject.org> 1:1.10.3-2
+- rebuild
 
 * Tue Feb 28 2017 Remi Collet <remi@fedoraproject.org> 1:1.10.3-1
 - update PEAR to 1.10.3
