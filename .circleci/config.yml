@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  docker-rpmbuild: aursu/rpmbuild@1.1.2
+  docker-rpmbuild: aursu/rpmbuild@1.1.4
 
 workflows:
   pearbuild:
@@ -11,29 +11,31 @@ workflows:
           build_file: docker-compose.php73.yml
           build_service: centos7pearbuildphp73
           bintray_uploader: centos7bintray
+          bintray-repo: php73custom
       - docker-rpmbuild/build:
           name: centos7pearbuildphp73relrpm
           build_file: docker-compose.php73.yml
           build_service: centos7pearbuildphp73rel
           bintray_uploader: centos7bintray
+          bintray-repo: php73custom
       - docker-rpmbuild/build:
           name: centos8pearbuildphp73rpm
           build_file: docker-compose.php73.yml
           build_service: centos8pearbuildphp73
           bintray_uploader: centos8bintray
+          bintray-repo: php73custom
       - docker-rpmbuild/build:
           name: centos8pearbuildphp73relrpm
           build_file: docker-compose.php73.yml
           build_service: centos8pearbuildphp73rel
           bintray_uploader: centos8bintray
+          bintray-repo: php73custom
       - docker-rpmbuild/build:
           name: centos7pearbuildphp74rpm
-          build_file: docker-compose.yml
           build_service: centos7pearbuildphp74
           bintray_uploader: centos7bintray
       - docker-rpmbuild/build:
           name: centos8pearbuildphp74rpm
-          build_file: docker-compose.yml
           build_service: centos8pearbuildphp74
           bintray_uploader: centos8bintray
       - docker-rpmbuild/build:
