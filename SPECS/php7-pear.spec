@@ -66,7 +66,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: %{pear_name}
 Version: 1.10.12
-Release: 2%{?dist}
+Release: 4%{?dist}
 Epoch: 1
 # PEAR, PEAR_Manpages, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv3+

@@ -40,20 +40,24 @@ workflows:
           name: centos7pearbuildphp74rpm
           build_service: centos7pearbuildphp74
           bintray_uploader: centos7bintray
+          bintray-repo: php74custom
       - docker-rpmbuild/build:
           name: centos8pearbuildphp74rpm
           build_service: centos8pearbuildphp74
           bintray_uploader: centos8bintray
+          bintray-repo: php74custom
       - docker-rpmbuild/build:
           name: centos7pearbuildphp80rpm
           build_file: docker-compose.php80.yml
           build_service: centos7pearbuildphp80
           bintray_uploader: centos7bintray
+          bintray-repo: php8custom
       - docker-rpmbuild/build:
           name: centos8pearbuildphp80rpm
           build_file: docker-compose.php80.yml
           build_service: centos8pearbuildphp80
           bintray_uploader: centos8bintray
+          bintray-repo: php8custom
       - docker-rpmbuild/image:
           name: centos7pearbuildphp73
           compose_file: build/php73/docker-compose.yml
