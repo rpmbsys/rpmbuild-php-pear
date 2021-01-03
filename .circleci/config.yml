@@ -1,7 +1,13 @@
 version: 2.1
 
 orbs:
-  docker-rpmbuild: aursu/rpmbuild@1.1.4
+  docker-rpmbuild: aursu/rpmbuild@1.1.5
+
+parameters:
+  package-vcs-url:
+    description: Package VCS URL for BinTray
+    type: string
+    default: https://github.com/aursu/rpmbuild-php-pear
 
 workflows:
   pearbuild:
