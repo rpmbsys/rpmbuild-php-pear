@@ -6,7 +6,7 @@ services:
       - rpm7:/home/centos/rpmbuild/RPMS
     build:
       context: .
-      dockerfile: Dockerfile.el8
+      dockerfile: Dockerfile.php80
       args:
         centos: $OS7
   centos8pearbuildphp80:
@@ -15,7 +15,7 @@ services:
       - rpm8:/home/centos/rpmbuild/RPMS
     build:
       context: .
-      dockerfile: Dockerfile.el8
+      dockerfile: Dockerfile.php80
       args:
         centos: $OS8
 
