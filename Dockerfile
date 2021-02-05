@@ -11,5 +11,5 @@ RUN chown -R $BUILD_USER ${BUILD_TOPDIR}/{SOURCES,SPECS}
 
 USER $BUILD_USER
 
-ENTRYPOINT ["/usr/bin/rpmbuild", "php7-pear.spec"]
+ENTRYPOINT ["/usr/bin/rpmbuild", "php74-pear.spec"]
 CMD ["-ba"]
