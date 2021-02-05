@@ -4,25 +4,25 @@ services:
     build:
       context: .
       args:
-        centos: $OS7
-    image: aursu/pearbuild:${OS7}-php-7.1
+        centos: 7.8.2003
+    image: aursu/pearbuild:7.8.2003-php-7.1
   centos7pearbuildphp7rel:
     build:
       context: .
       dockerfile: Dockerfile.rel
       args:
-        centos: $OS7
-    image: aursu/pearbuild:${OS7}-php7-7.1
+        centos: 7.8.2003
+    image: aursu/pearbuild:7.8.2003-php7-7.1
   centos8pearbuildphp7:
     build:
       context: .
       args:
-        centos: $OS8
-    image: aursu/pearbuild:${OS8}-php-7.1
+        centos: 8.2.2004
+    image: aursu/pearbuild:8.2.2004-php-7.1
   centos8pearbuildphp7rel:
     build:
       context: .
       dockerfile: Dockerfile.rel
       args:
-        centos: $OS8
-    image: aursu/pearbuild:${OS8}-php7-7.1
+        centos: 8.2.2004
+    image: aursu/pearbuild:8.2.2004-php7-7.1
