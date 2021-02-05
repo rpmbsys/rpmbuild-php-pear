@@ -6,8 +6,8 @@ services:
       - rpm7:/home/centos/rpmbuild/RPMS
     build:
       context: .
+      dockerfile: Dockerfile.php73
       args:
-        dockerfile: Dockerfile.php73
         centos: $OS7
         buildrepo: php73build
   centos7pearbuildphp73rel:
@@ -17,8 +17,8 @@ services:
       - rpm7:/home/centos/rpmbuild/RPMS
     build:
       context: .
+      dockerfile: Dockerfile.php73
       args:
-        dockerfile: Dockerfile.php73
         centos: $OS7
         buildrepo: php73build
         image: build-rel
@@ -28,8 +28,8 @@ services:
       - rpm8:/home/centos/rpmbuild/RPMS
     build:
       context: .
+      dockerfile: Dockerfile.php73
       args:
-        dockerfile: Dockerfile.php73
         centos: $OS8
         buildrepo: php73build
   centos8pearbuildphp73rel:
@@ -39,8 +39,8 @@ services:
       - rpm8:/home/centos/rpmbuild/RPMS
     build:
       context: .
+      dockerfile: Dockerfile.php73
       args:
-        dockerfile: Dockerfile.php73
         centos: $OS8
         buildrepo: php73build
         image: build-rel

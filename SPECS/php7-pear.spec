@@ -441,7 +441,7 @@ fi
 %{_mandir}/man5/pear.conf.5*
 
 %changelog
-* Fri Feb  5 2020 Alexander Ursu <alexander.ursu@gmail.com> - 1:1.10.12-6
+* Fri Feb  5 2021 Alexander Ursu <alexander.ursu@gmail.com> - 1:1.10.12-6
 - Setup pecl_xmldir in macros file
 
 * Tue Jan 19 2021 Remi Collet <remi@remirepo.net> - 1:1.10.12-5
