@@ -1,25 +1,23 @@
 version: "3.5"
 services:
   centos7pearbuildphp80:
-    entrypoint: ["/usr/bin/rpmbuild", "php8-pear.spec"]
     volumes:
       - rpms:/home/centos/rpmbuild/SRPMS
       - rpm7:/home/centos/rpmbuild/RPMS
     build:
       context: .
+      dockerfile: Dockerfile.el8
       args:
         centos: $OS7
-        buildrepo: php80build
   centos8pearbuildphp80:
-    entrypoint: ["/usr/bin/rpmbuild", "php8-pear.spec"]
     volumes:
       - rpms:/home/centos/rpmbuild/SRPMS
       - rpm8:/home/centos/rpmbuild/RPMS
     build:
       context: .
+      dockerfile: Dockerfile.el8
       args:
         centos: $OS8
-        buildrepo: php80build
 
 volumes:
   rpms:

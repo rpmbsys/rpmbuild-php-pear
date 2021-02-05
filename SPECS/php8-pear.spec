@@ -9,7 +9,7 @@
 %global metadir %{_localstatedir}/lib/pear
 
 %global getoptver 1.4.3
-%global arctarver 1.4.11
+%global arctarver 1.4.12
 # https://pear.php.net/bugs/bug.php?id=19367
 # Structures_Graph 1.0.4 - incorrect FSF address
 %global structver 1.1.1
@@ -27,7 +27,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: php-pear
 Version: 1.10.12
-Release: 4%{?dist}
+Release: 5%{?dist}
 Epoch: 1
 # PEAR, PEAR_Manpages, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv3+
@@ -163,6 +163,8 @@ phpab --template fedora \
 
 
 %install
+rm -rf %{buildroot}
+
 export PHP_PEAR_SYSCONF_DIR=%{_sysconfdir}
 export PHP_PEAR_SIG_KEYDIR=%{_sysconfdir}/pearkeys
 export PHP_PEAR_SIG_BIN=%{_bindir}/gpg
@@ -272,6 +274,7 @@ exit $ret
 echo 'Test suite disabled (missing "--with tests" option)'
 %endif
 
+%if 0%{?fedora} >= 24 || 0%{?rhel} >= 8
 # Register newly installed PECL packages
 %transfiletriggerin -- %{pecl_xmldir}
 while read file; do
@@ -293,7 +296,56 @@ while ($file=fgets(STDIN)) {
 }' | while read  name; do
   %{_bindir}/pecl uninstall --nodeps --ignore-errors --register-only "$name" >/dev/null || :
 done
+%endif
 
+%if 0%{?fedora} < 25 && 0%{?rhel} < 8
+%pre
+# Manage relocation of metadata, before update to pear
+if [ -d %{peardir}/.registry -a ! -d %{metadir}/.registry ]; then
+  mkdir -p %{metadir}
+  mv -f %{peardir}/.??* %{metadir}
+fi
+
+
+%post
+# force new value as pear.conf is (noreplace)
+current=$(%{_bindir}/pear config-get test_dir system)
+if [ "$current" != "%{_datadir}/tests/pear" ]; then
+%{_bindir}/pear config-set \
+    test_dir %{_datadir}/tests/pear \
+    system >/dev/null || :
+fi
+
+current=$(%{_bindir}/pear config-get data_dir system)
+if [ "$current" != "%{_datadir}/pear-data" ]; then
+%{_bindir}/pear config-set \
+    data_dir %{_datadir}/pear-data \
+    system >/dev/null || :
+fi
+
+current=$(%{_bindir}/pear config-get metadata_dir system)
+if [ "$current" != "%{metadir}" ]; then
+%{_bindir}/pear config-set \
+    metadata_dir %{metadir} \
+    system >/dev/null || :
+fi
+
+current=$(%{_bindir}/pear config-get -c pecl doc_dir system)
+if [ "$current" != "%{_docdir}/pecl" ]; then
+%{_bindir}/pear config-set \
+    -c pecl \
+    doc_dir %{_docdir}/pecl \
+    system >/dev/null || :
+fi
+
+current=$(%{_bindir}/pear config-get -c pecl test_dir system)
+if [ "$current" != "%{_datadir}/tests/pecl" ]; then
+%{_bindir}/pear config-set \
+    -c pecl \
+    test_dir %{_datadir}/tests/pecl \
+    system >/dev/null || :
+fi
+%endif
 
 %postun
 if [ $1 -eq 0 -a -d %{metadir}/.registry ] ; then
@@ -329,6 +381,9 @@ fi
 
 
 %changelog
+* Tue Jan 19 2021 Remi Collet <remi@remirepo.net> - 1:1.10.12-5
+- update Archive_Tar to 1.4.12
+
 * Mon Nov 23 2020 Remi Collet <remi@remirepo.net> - 1:1.10.12-4
 - update Archive_Tar to 1.4.11
 
