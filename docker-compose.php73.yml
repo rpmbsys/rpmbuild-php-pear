@@ -7,6 +7,7 @@ services:
     build:
       context: .
       args:
+        dockerfile: Dockerfile.php73
         centos: $OS7
         buildrepo: php73build
   centos7pearbuildphp73rel:
@@ -17,6 +18,7 @@ services:
     build:
       context: .
       args:
+        dockerfile: Dockerfile.php73
         centos: $OS7
         buildrepo: php73build
         image: build-rel
@@ -27,6 +29,7 @@ services:
     build:
       context: .
       args:
+        dockerfile: Dockerfile.php73
         centos: $OS8
         buildrepo: php73build
   centos8pearbuildphp73rel:
@@ -37,6 +40,7 @@ services:
     build:
       context: .
       args:
+        dockerfile: Dockerfile.php73
         centos: $OS8
         buildrepo: php73build
         image: build-rel

@@ -81,7 +81,7 @@ Source3: cleanup.php
 Source10: pear.sh
 Source11: pecl.sh
 Source12: peardev.sh
-Source13: macros.pear.php7
+Source13: macros.pear
 
 Source103: php7-cleanup.php
 Source110: php7-pear.sh
