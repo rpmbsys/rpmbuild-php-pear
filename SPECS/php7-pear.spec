@@ -66,7 +66,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: %{pear_name}
 Version: 1.10.12
-Release: 5%{?dist}
+Release: 6%{?dist}
 Epoch: 1
 # PEAR, PEAR_Manpages, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv3+
@@ -441,6 +441,9 @@ fi
 %{_mandir}/man5/pear.conf.5*
 
 %changelog
+* Fri Feb  5 2020 Alexander Ursu <alexander.ursu@gmail.com> - 1:1.10.12-6
+- Setup pecl_xmldir in macros file
+
 * Tue Jan 19 2021 Remi Collet <remi@remirepo.net> - 1:1.10.12-5
 - update Archive_Tar to 1.4.12
 
