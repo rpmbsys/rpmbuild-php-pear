@@ -48,7 +48,7 @@
 %global metadir             %{pear_sharedstatedir}
 
 %global getoptver 1.4.3
-%global arctarver 1.4.11
+%global arctarver 1.4.12
 # https://pear.php.net/bugs/bug.php?id=19367
 # Structures_Graph 1.0.4 - incorrect FSF address
 %global structver 1.1.1
@@ -66,7 +66,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: %{pear_name}
 Version: 1.10.12
-Release: 4%{?dist}
+Release: 5%{?dist}
 Epoch: 1
 # PEAR, PEAR_Manpages, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv3+
@@ -441,6 +441,9 @@ fi
 %{_mandir}/man5/pear.conf.5*
 
 %changelog
+* Tue Jan 19 2021 Remi Collet <remi@remirepo.net> - 1:1.10.12-5
+- update Archive_Tar to 1.4.12
+
 * Mon Nov 23 2020 Remi Collet <remi@remirepo.net> - 1:1.10.12-4
 - update Archive_Tar to 1.4.11
 
