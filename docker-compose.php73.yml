@@ -6,7 +6,6 @@ services:
       - rpm7:/home/centos/rpmbuild/RPMS
     build:
       context: .
-      dockerfile: Dockerfile.php73
       args:
         centos: $OS7
         buildrepo: php73build
@@ -16,7 +15,6 @@ services:
       - rpm8:/home/centos/rpmbuild/RPMS
     build:
       context: .
-      dockerfile: Dockerfile.php73
       args:
         centos: $OS8
         buildrepo: php73build

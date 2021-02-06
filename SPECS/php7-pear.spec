@@ -89,6 +89,8 @@ Source111: php7-pecl.sh
 Source112: php7-peardev.sh
 Source113: php7-macros.pear
 
+Source213: macros.pear.php7
+
 Source21: http://pear.php.net/get/Archive_Tar-%{arctarver}.tgz
 Source22: http://pear.php.net/get/Console_Getopt-%{getoptver}.tgz
 Source23: http://pear.php.net/get/Structures_Graph-%{structver}.tgz
@@ -193,8 +195,12 @@ sed -e 's:@BINDIR@:%{_bindir}:' \
 %if %{with_relocation}
     %{SOURCE113} > macros.pear
 %else
+%if "%{php_version}" < "7.4"
     %{SOURCE13} > macros.pear
-%endif
+%else
+    %{SOURCE213} > macros.pear
+%endif # php_version
+%endif # with_relocation
 
 %build
 %if 0%{?fedora}
