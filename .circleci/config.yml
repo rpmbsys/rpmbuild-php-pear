@@ -19,21 +19,9 @@ workflows:
           bintray_uploader: centos7bintray
           bintray-repo: php73custom
       - docker-rpmbuild/build:
-          name: centos7pearbuildphp73relrpm
-          build_file: docker-compose.php73.yml
-          build_service: centos7pearbuildphp73rel
-          bintray_uploader: centos7bintray
-          bintray-repo: php73custom
-      - docker-rpmbuild/build:
           name: centos8pearbuildphp73rpm
           build_file: docker-compose.php73.yml
           build_service: centos8pearbuildphp73
-          bintray_uploader: centos8bintray
-          bintray-repo: php73custom
-      - docker-rpmbuild/build:
-          name: centos8pearbuildphp73relrpm
-          build_file: docker-compose.php73.yml
-          build_service: centos8pearbuildphp73rel
           bintray_uploader: centos8bintray
           bintray-repo: php73custom
       - docker-rpmbuild/build:
@@ -65,23 +53,11 @@ workflows:
           requires:
             - centos7pearbuildphp73rpm
       - docker-rpmbuild/image:
-          name: centos7pearbuildphp73rel
-          compose_file: build/php73/docker-compose.yml
-          build_service: centos7pearbuildphp73rel
-          requires:
-            - centos7pearbuildphp73relrpm
-      - docker-rpmbuild/image:
           name: centos8pearbuildphp73
           compose_file: build/php73/docker-compose.yml
           build_service: centos8pearbuildphp73
           requires:
             - centos8pearbuildphp73rpm
-      - docker-rpmbuild/image:
-          name: centos8pearbuildphp73rel
-          compose_file: build/php73/docker-compose.yml
-          build_service: centos8pearbuildphp73rel
-          requires:
-            - centos8pearbuildphp73relrpm
       - docker-rpmbuild/image:
           name: centos7pearbuildphp74
           compose_file: build/php74/docker-compose.yml

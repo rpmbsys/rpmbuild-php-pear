@@ -6,23 +6,9 @@ services:
       args:
         centos: $OS7
     image: aursu/pearbuild:${OS7}-php-7.3
-  centos7pearbuildphp73rel:
-    build:
-      context: .
-      dockerfile: Dockerfile.rel
-      args:
-        centos: $OS7
-    image: aursu/pearbuild:${OS7}-php7-7.3
   centos8pearbuildphp73:
     build:
       context: .
       args:
         centos: $OS8
     image: aursu/pearbuild:${OS8}-php-7.3
-  centos8pearbuildphp73rel:
-    build:
-      context: .
-      dockerfile: Dockerfile.rel
-      args:
-        centos: $OS8
-    image: aursu/pearbuild:${OS8}-php7-7.3

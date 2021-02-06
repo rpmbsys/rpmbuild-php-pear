@@ -10,18 +10,6 @@ services:
       args:
         centos: $OS7
         buildrepo: php73build
-  centos7pearbuildphp73rel:
-    command: ["-ba", "--with", "relocation"]
-    volumes:
-      - rpms:/home/centos/rpmbuild/SRPMS
-      - rpm7:/home/centos/rpmbuild/RPMS
-    build:
-      context: .
-      dockerfile: Dockerfile.php73
-      args:
-        centos: $OS7
-        buildrepo: php73build
-        image: build-rel
   centos8pearbuildphp73:
     volumes:
       - rpms:/home/centos/rpmbuild/SRPMS
@@ -32,18 +20,6 @@ services:
       args:
         centos: $OS8
         buildrepo: php73build
-  centos8pearbuildphp73rel:
-    command: ["-ba", "--with", "relocation"]
-    volumes:
-      - rpms:/home/centos/rpmbuild/SRPMS
-      - rpm8:/home/centos/rpmbuild/RPMS
-    build:
-      context: .
-      dockerfile: Dockerfile.php73
-      args:
-        centos: $OS8
-        buildrepo: php73build
-        image: build-rel
 
 volumes:
   rpms:
