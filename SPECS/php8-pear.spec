@@ -8,6 +8,9 @@
 %global peardir %{_datadir}/pear
 %global metadir %{_localstatedir}/lib/pear
 
+%define _debugsource_template %{nil}
+%define debug_package %{nil}
+
 %global getoptver 1.4.3
 %global arctarver 1.4.12
 # https://pear.php.net/bugs/bug.php?id=19367

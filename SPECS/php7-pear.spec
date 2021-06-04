@@ -8,6 +8,8 @@
 
 %global with_relocation 0%{?_with_relocation:1}
 
+%define _debugsource_template %{nil}
+%define debug_package %{nil}
 
 %if %{with_relocation}
 %global program_suffix      7
