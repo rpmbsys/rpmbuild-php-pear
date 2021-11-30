@@ -384,6 +384,12 @@ fi
 
 
 %changelog
+* Wed Aug 11 2021 Remi Collet <remi@remirepo.net> - 1.10.13-1
+- update to 1.10.13
+
+* Wed Jul 21 2021 Remi Collet <remi@remirepo.net> - 1:1.10.12-9
+- update Archive_Tar to 1.4.14
+
 * Tue Jan 19 2021 Remi Collet <remi@remirepo.net> - 1:1.10.12-5
 - update Archive_Tar to 1.4.12
 
