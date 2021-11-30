@@ -12,7 +12,7 @@
 %define debug_package %{nil}
 
 %global getoptver 1.4.3
-%global arctarver 1.4.12
+%global arctarver 1.4.14
 # https://pear.php.net/bugs/bug.php?id=19367
 # Structures_Graph 1.0.4 - incorrect FSF address
 %global structver 1.1.1
@@ -29,8 +29,8 @@
 
 Summary: PHP Extension and Application Repository framework
 Name: php-pear
-Version: 1.10.12
-Release: 5%{?dist}
+Version: 1.10.13
+Release: 1%{?dist}
 Epoch: 1
 # PEAR, PEAR_Manpages, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv3+
