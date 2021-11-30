@@ -24,13 +24,13 @@ jobs:
             repo: php74custom
             build: centos8pearbuildphp74
             uploader: centos8bintray
-          - compose-file: docker-compose.php73.yml
-            repo: php73custom
-            build: centos7pearbuildphp73
+          - compose-file: docker-compose.php81.yml
+            repo: php81custom
+            build: centos7pearbuildphp81
             uploader: centos7bintray
-          - compose-file: docker-compose.php73.yml
-            repo: php73custom
-            build: centos8pearbuildphp73
+          - compose-file: docker-compose.php81.yml
+            repo: php81custom
+            build: centos8pearbuildphp81
             uploader: centos8bintray
           - compose-file: docker-compose.php80.yml
             repo: php8custom
@@ -58,7 +58,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        compose-file: [build/php74/docker-compose.yml, build/php73/docker-compose.yml, build/php80/docker-compose.yml]
+        compose-file: [build/php74/docker-compose.yml, build/php81/docker-compose.yml, build/php80/docker-compose.yml]
     steps:
       - uses: actions/checkout@v2
         with:

@@ -13,17 +13,17 @@ workflows:
   pearbuild:
     jobs:
       - docker-rpmbuild/build:
-          name: centos7pearbuildphp73rpm
-          build_file: docker-compose.php73.yml
-          build_service: centos7pearbuildphp73
+          name: centos7pearbuildphp81rpm
+          build_file: docker-compose.php81.yml
+          build_service: centos7pearbuildphp81
           bintray_uploader: centos7bintray
-          bintray-repo: php73custom
+          bintray-repo: php81custom
       - docker-rpmbuild/build:
-          name: centos8pearbuildphp73rpm
-          build_file: docker-compose.php73.yml
-          build_service: centos8pearbuildphp73
+          name: centos8pearbuildphp81rpm
+          build_file: docker-compose.php81.yml
+          build_service: centos8pearbuildphp81
           bintray_uploader: centos8bintray
-          bintray-repo: php73custom
+          bintray-repo: php81custom
       - docker-rpmbuild/build:
           name: centos7pearbuildphp74rpm
           build_service: centos7pearbuildphp74
@@ -47,17 +47,17 @@ workflows:
           bintray_uploader: centos8bintray
           bintray-repo: php8custom
       - docker-rpmbuild/image:
-          name: centos7pearbuildphp73
-          compose_file: build/php73/docker-compose.yml
-          build_service: centos7pearbuildphp73
+          name: centos7pearbuildphp81
+          compose_file: build/php81/docker-compose.yml
+          build_service: centos7pearbuildphp81
           requires:
-            - centos7pearbuildphp73rpm
+            - centos7pearbuildphp81rpm
       - docker-rpmbuild/image:
-          name: centos8pearbuildphp73
-          compose_file: build/php73/docker-compose.yml
-          build_service: centos8pearbuildphp73
+          name: centos8pearbuildphp81
+          compose_file: build/php81/docker-compose.yml
+          build_service: centos8pearbuildphp81
           requires:
-            - centos8pearbuildphp73rpm
+            - centos8pearbuildphp81rpm
       - docker-rpmbuild/image:
           name: centos7pearbuildphp74
           compose_file: build/php74/docker-compose.yml

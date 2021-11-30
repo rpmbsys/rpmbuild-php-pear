@@ -1,23 +1,23 @@
 version: "3.5"
 services:
-  centos7pearbuildphp73:
+  centos7pearbuildphp81:
     volumes:
       - rpms:/home/centos/rpmbuild/SRPMS
       - rpm7:/home/centos/rpmbuild/RPMS
     build:
       context: .
+      dockerfile: Dockerfile.php8x
       args:
         centos: $OS7
-        buildrepo: php73build
-  centos8pearbuildphp73:
+  centos8pearbuildphp81:
     volumes:
       - rpms:/home/centos/rpmbuild/SRPMS
       - rpm8:/home/centos/rpmbuild/RPMS
     build:
       context: .
+      dockerfile: Dockerfile.php8x
       args:
         centos: $OS8
-        buildrepo: php73build
 
 volumes:
   rpms:

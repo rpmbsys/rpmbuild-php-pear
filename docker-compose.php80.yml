@@ -6,18 +6,20 @@ services:
       - rpm7:/home/centos/rpmbuild/RPMS
     build:
       context: .
-      dockerfile: Dockerfile.php80
+      dockerfile: Dockerfile.php8x
       args:
         centos: $OS7
+        buildrepo: php80build
   centos8pearbuildphp80:
     volumes:
       - rpms:/home/centos/rpmbuild/SRPMS
       - rpm8:/home/centos/rpmbuild/RPMS
     build:
       context: .
-      dockerfile: Dockerfile.php80
+      dockerfile: Dockerfile.php8x
       args:
         centos: $OS8
+        buildrepo: php80build
 
 volumes:
   rpms:
