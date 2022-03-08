@@ -14,16 +14,16 @@ env:
   global:
     - ARTIFACTORY_URL=https://rpmb.jfrog.io
     - OS7=7.9.2009
-    - OS8=8.4.2105
+    - OS8=stream8
     - OS7TAG=7.9.2009
-    - OS8TAG=8.4.2105
+    - OS8TAG=stream8
   jobs:
-    - BUILD_COMPOSE_FILE=docker-compose.yml       BINTRAY_REPO=php74custom BUILD=centos7pearbuildphp74    UPLOADER=centos7bintray
-    - BUILD_COMPOSE_FILE=docker-compose.yml       BINTRAY_REPO=php74custom BUILD=centos8pearbuildphp74    UPLOADER=centos8bintray
-    - BUILD_COMPOSE_FILE=docker-compose.php81.yml BINTRAY_REPO=php81custom BUILD=centos7pearbuildphp81    UPLOADER=centos7bintray
-    - BUILD_COMPOSE_FILE=docker-compose.php81.yml BINTRAY_REPO=php81custom BUILD=centos8pearbuildphp81    UPLOADER=centos8bintray
-    - BUILD_COMPOSE_FILE=docker-compose.php80.yml BINTRAY_REPO=php8custom  BUILD=centos7pearbuildphp80    UPLOADER=centos7bintray
-    - BUILD_COMPOSE_FILE=docker-compose.php80.yml BINTRAY_REPO=php8custom  BUILD=centos8pearbuildphp80    UPLOADER=centos8bintray
+    - BUILD_COMPOSE_FILE=docker-compose.yml       BINTRAY_REPO=php74custom BUILD=centos7pearbuildphp74 UPLOADER=centos7bintray
+    - BUILD_COMPOSE_FILE=docker-compose.yml       BINTRAY_REPO=php74custom BUILD=stream8pearbuildphp74 UPLOADER=stream8bintray REPO_PATH=centos/8-stream
+    - BUILD_COMPOSE_FILE=docker-compose.php81.yml BINTRAY_REPO=php81custom BUILD=centos7pearbuildphp81 UPLOADER=centos7bintray
+    - BUILD_COMPOSE_FILE=docker-compose.php81.yml BINTRAY_REPO=php81custom BUILD=stream8pearbuildphp81 UPLOADER=stream8bintray REPO_PATH=centos/8-stream
+    - BUILD_COMPOSE_FILE=docker-compose.php80.yml BINTRAY_REPO=php8custom  BUILD=centos7pearbuildphp80 UPLOADER=centos7bintray
+    - BUILD_COMPOSE_FILE=docker-compose.php80.yml BINTRAY_REPO=php8custom  BUILD=stream8pearbuildphp80 UPLOADER=stream8bintray REPO_PATH=centos/8-stream
 
 install: skip
 

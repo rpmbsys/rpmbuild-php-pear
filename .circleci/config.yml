@@ -19,10 +19,10 @@ workflows:
           bintray_uploader: centos7bintray
           bintray-repo: php81custom
       - docker-rpmbuild/build:
-          name: centos8pearbuildphp81rpm
+          name: stream8pearbuildphp81rpm
           build_file: docker-compose.php81.yml
-          build_service: centos8pearbuildphp81
-          bintray_uploader: centos8bintray
+          build_service: stream8pearbuildphp81
+          bintray_uploader: stream8bintray
           bintray-repo: php81custom
       - docker-rpmbuild/build:
           name: centos7pearbuildphp74rpm
@@ -30,9 +30,9 @@ workflows:
           bintray_uploader: centos7bintray
           bintray-repo: php74custom
       - docker-rpmbuild/build:
-          name: centos8pearbuildphp74rpm
-          build_service: centos8pearbuildphp74
-          bintray_uploader: centos8bintray
+          name: stream8pearbuildphp74rpm
+          build_service: stream8pearbuildphp74
+          bintray_uploader: stream8bintray
           bintray-repo: php74custom
       - docker-rpmbuild/build:
           name: centos7pearbuildphp80rpm
@@ -41,10 +41,10 @@ workflows:
           bintray_uploader: centos7bintray
           bintray-repo: php8custom
       - docker-rpmbuild/build:
-          name: centos8pearbuildphp80rpm
+          name: stream8pearbuildphp80rpm
           build_file: docker-compose.php80.yml
-          build_service: centos8pearbuildphp80
-          bintray_uploader: centos8bintray
+          build_service: stream8pearbuildphp80
+          bintray_uploader: stream8bintray
           bintray-repo: php8custom
       - docker-rpmbuild/image:
           name: centos7pearbuildphp81
@@ -53,11 +53,11 @@ workflows:
           requires:
             - centos7pearbuildphp81rpm
       - docker-rpmbuild/image:
-          name: centos8pearbuildphp81
+          name: stream8pearbuildphp81
           compose_file: build/php81/docker-compose.yml
-          build_service: centos8pearbuildphp81
+          build_service: stream8pearbuildphp81
           requires:
-            - centos8pearbuildphp81rpm
+            - stream8pearbuildphp81rpm
       - docker-rpmbuild/image:
           name: centos7pearbuildphp74
           compose_file: build/php74/docker-compose.yml
@@ -65,11 +65,11 @@ workflows:
           requires:
             - centos7pearbuildphp74rpm
       - docker-rpmbuild/image:
-          name: centos8pearbuildphp74
+          name: stream8pearbuildphp74
           compose_file: build/php74/docker-compose.yml
-          build_service: centos8pearbuildphp74
+          build_service: stream8pearbuildphp74
           requires:
-            - centos8pearbuildphp74rpm
+            - stream8pearbuildphp74rpm
       - docker-rpmbuild/image:
           name: centos7pearbuildphp80
           compose_file: build/php80/docker-compose.yml
@@ -77,8 +77,8 @@ workflows:
           requires:
             - centos7pearbuildphp80rpm
       - docker-rpmbuild/image:
-          name: centos8pearbuildphp80
+          name: stream8pearbuildphp80
           compose_file: build/php80/docker-compose.yml
-          build_service: centos8pearbuildphp80
+          build_service: stream8pearbuildphp80
           requires:
-            - centos8pearbuildphp80rpm
+            - stream8pearbuildphp80rpm

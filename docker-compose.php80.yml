@@ -1,8 +1,7 @@
-version: "3.5"
+version: "3"
 services:
   centos7pearbuildphp80:
     volumes:
-      - rpms:/home/centos/rpmbuild/SRPMS
       - rpm7:/home/centos/rpmbuild/RPMS
     build:
       context: .
@@ -10,10 +9,9 @@ services:
       args:
         centos: $OS7
         buildrepo: php80build
-  centos8pearbuildphp80:
+  stream8pearbuildphp80:
     volumes:
-      - rpms:/home/centos/rpmbuild/SRPMS
-      - rpm8:/home/centos/rpmbuild/RPMS
+      - rpm8stream:/home/centos/rpmbuild/RPMS
     build:
       context: .
       dockerfile: Dockerfile.php8x
@@ -22,9 +20,7 @@ services:
         buildrepo: php80build
 
 volumes:
-  rpms:
-    name: rpms
   rpm7:
     name: rpm7
-  rpm8:
-    name: rpm8
+  rpm8stream:
+    name: rpm8stream

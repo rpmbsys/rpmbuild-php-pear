@@ -6,7 +6,7 @@ services:
       args:
         centos: $OS7
     image: aursu/pearbuild:${OS7}-php-7.4
-  centos8pearbuildphp74:
+  stream8pearbuildphp74:
     build:
       context: .
       args:
