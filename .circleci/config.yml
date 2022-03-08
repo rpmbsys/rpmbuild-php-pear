@@ -34,18 +34,6 @@ workflows:
           build_service: stream8pearbuildphp74
           bintray_uploader: stream8bintray
           bintray-repo: php74custom
-      - docker-rpmbuild/build:
-          name: centos7pearbuildphp80rpm
-          build_file: docker-compose.php80.yml
-          build_service: centos7pearbuildphp80
-          bintray_uploader: centos7bintray
-          bintray-repo: php8custom
-      - docker-rpmbuild/build:
-          name: stream8pearbuildphp80rpm
-          build_file: docker-compose.php80.yml
-          build_service: stream8pearbuildphp80
-          bintray_uploader: stream8bintray
-          bintray-repo: php8custom
       - docker-rpmbuild/image:
           name: centos7pearbuildphp81
           compose_file: build/php81/docker-compose.yml
@@ -70,15 +58,3 @@ workflows:
           build_service: stream8pearbuildphp74
           requires:
             - stream8pearbuildphp74rpm
-      - docker-rpmbuild/image:
-          name: centos7pearbuildphp80
-          compose_file: build/php80/docker-compose.yml
-          build_service: centos7pearbuildphp80
-          requires:
-            - centos7pearbuildphp80rpm
-      - docker-rpmbuild/image:
-          name: stream8pearbuildphp80
-          compose_file: build/php80/docker-compose.yml
-          build_service: stream8pearbuildphp80
-          requires:
-            - stream8pearbuildphp80rpm
