@@ -7,18 +7,28 @@ services:
       context: .
       dockerfile: Dockerfile.php8x
       args:
-        centos: $OS7
+        os: $OS7
   stream8pearbuildphp81:
     volumes:
-      - rpm8stream:/home/centos/rpmbuild/RPMS
+      - rpm8rocky:/home/centos/rpmbuild/RPMS
     build:
       context: .
       dockerfile: Dockerfile.php8x
       args:
-        centos: $OS8
+        os: $RL8
+  stream9pearbuildphp81:
+    volumes:
+      - rpm9stream:/home/centos/rpmbuild/RPMS
+    build:
+      context: .
+      dockerfile: Dockerfile.php8x
+      args:
+        os: $OS9
 
 volumes:
   rpm7:
     name: rpm7
-  rpm8stream:
-    name: rpm8stream
+  rpm8rocky:
+    name: rpm8rocky
+  rpm9stream:
+    name: rpm9stream

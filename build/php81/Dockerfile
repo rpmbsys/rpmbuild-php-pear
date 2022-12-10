@@ -1,6 +1,6 @@
-ARG centos=7.9.2009
-FROM aursu/php81build:${centos}-build
+ARG os=8.7.20221112
+FROM aursu/php81build:${os}-build
 
-RUN yum -y --enablerepo=bintray-phpcustom install \
+RUN dnf -y --enablerepo=bintray-phpcustom install \
         php-pear \
-    && yum clean all && rm -rf /var/cache/yum /var/cache/dnf
+    && dnf clean all && rm -rf /var/cache/dnf /var/lib/rpm/__db*

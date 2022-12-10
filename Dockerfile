@@ -1,8 +1,8 @@
-ARG centos=7.9.2009
+ARG os=7.9.2009
 ARG buildrepo=php74build
 ARG image=build
 
-FROM aursu/${buildrepo}:${centos}-${image}
+FROM aursu/${buildrepo}:${os}-${image}
 
 COPY SOURCES ${BUILD_TOPDIR}/SOURCES
 COPY SPECS ${BUILD_TOPDIR}/SPECS

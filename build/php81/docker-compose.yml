@@ -1,14 +1,21 @@
-version: "3.5"
+version: "3"
 services:
-  centos7pearbuildphp81:
+  centos7build:
     build:
       context: .
+      dockerfile: Dockerfile.el7
       args:
         centos: $OS7
     image: aursu/pearbuild:${OS7}-php-8.1
-  stream8pearbuildphp81:
+  rocky8build:
     build:
       context: .
       args:
-        centos: $OS8
-    image: aursu/pearbuild:${OS8}-php-8.1
+        os: $RL8
+    image: aursu/pearbuild:${RL8TAG}-php-8.1
+  stream9build:
+    build:
+      context: .
+      args:
+        os: $OS9
+    image: aursu/pearbuild:${OS9TAG}-php-8.1
