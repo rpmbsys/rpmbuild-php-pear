@@ -1,6 +1,6 @@
 version: "3"
 services:
-  centos7pearbuildphp81:
+  centos7build:
     volumes:
       - rpm7:/home/centos/rpmbuild/RPMS
     build:
@@ -8,7 +8,7 @@ services:
       dockerfile: Dockerfile.php8x
       args:
         os: $OS7
-  stream8pearbuildphp81:
+  rocky8build:
     volumes:
       - rpm8rocky:/home/centos/rpmbuild/RPMS
     build:
@@ -16,7 +16,7 @@ services:
       dockerfile: Dockerfile.php8x
       args:
         os: $RL8
-  stream9pearbuildphp81:
+  stream9build:
     volumes:
       - rpm9stream:/home/centos/rpmbuild/RPMS
     build:
