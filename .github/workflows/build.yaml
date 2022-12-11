@@ -15,6 +15,7 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
+    if: ${{ ! startsWith(github.ref_name, 'skip-rpm-') }}
     strategy:
       matrix:
         include:
@@ -64,6 +65,7 @@ jobs:
       - run: docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm -e BINTRAY_USER=$BINTRAY_USER -e BINTRAY_API_KEY=$BINTRAY_API_KEY -e BINTRAY_REPO=$BINTRAY_REPO -e ARTIFACTORY_URL=$ARTIFACTORY_URL -e REPO_PATH=$REPO_PATH $UPLOADER
   docker:
     needs: test
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
