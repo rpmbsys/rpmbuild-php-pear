@@ -84,7 +84,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        compose-file: [build/php74/docker-compose.yml, build/php81/docker-compose.yml]
+        compose-file: [build/php74/docker-compose.yml, build/php81/docker-compose.yml, build/php82/docker-compose.yml]
     steps:
       - uses: actions/checkout@v2
         with:
