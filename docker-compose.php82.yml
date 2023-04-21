@@ -1,0 +1,37 @@
+version: "3"
+services:
+  centos7build:
+    volumes:
+      - rpm7:/home/centos/rpmbuild/RPMS
+    build:
+      context: .
+      dockerfile: Dockerfile.php8x
+      args:
+        os: $OS7
+        buildrepo: php82build
+  rocky8build:
+    volumes:
+      - rpm8rocky:/home/centos/rpmbuild/RPMS
+    build:
+      context: .
+      dockerfile: Dockerfile.php8x
+      args:
+        os: $RL8
+        buildrepo: php82build
+  stream9build:
+    volumes:
+      - rpm9stream:/home/centos/rpmbuild/RPMS
+    build:
+      context: .
+      dockerfile: Dockerfile.php8x
+      args:
+        os: $OS9
+        buildrepo: php82build
+
+volumes:
+  rpm7:
+    name: rpm7
+  rpm8rocky:
+    name: rpm8rocky
+  rpm9stream:
+    name: rpm9stream
