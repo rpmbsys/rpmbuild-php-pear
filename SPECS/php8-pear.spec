@@ -29,12 +29,13 @@
 
 Summary: PHP Extension and Application Repository framework
 Name: php-pear
-Version: 1.10.13
+Version: 1.10.14
 Release: 1%{?dist}
 Epoch: 1
-# PEAR, PEAR_Manpages, Archive_Tar, XML_Util, Console_Getopt are BSD
-# Structures_Graph is LGPLv3+
-License: BSD and LGPLv3+
+# BSD-2-Clause: PEAR, PEAR_Manpages, Archive_Tar, Console_Getopt
+# BSD-3-Clause: XML_Util
+# LGPL-3.0-or-later: Structures_Graph
+License: BSD-2-Clause AND BSD-3-Clause AND LGPL-3.0-or-later
 URL: http://pear.php.net/package/PEAR
 Source0: http://download.pear.php.net/package/PEAR-%{version}%{?pearprever}.tgz
 # wget https://raw.githubusercontent.com/pear/pear-core/stable/install-pear.php
@@ -221,7 +222,7 @@ install -m 644 -D macros.pear \
 
 # apply patches on installed PEAR tree
 pushd %{buildroot}%{peardir}
-: no patch
+  : none
 popd
 
 # Why this file here ?
@@ -384,6 +385,9 @@ fi
 
 
 %changelog
+* Mon Nov 27 2023 Remi Collet <remi@remirepo.net> - 1.10.14-1
+- update to 1.10.14
+
 * Wed Aug 11 2021 Remi Collet <remi@remirepo.net> - 1.10.13-1
 - update to 1.10.13
 

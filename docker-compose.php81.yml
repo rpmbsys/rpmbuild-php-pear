@@ -8,6 +8,7 @@ services:
       dockerfile: Dockerfile.php8x
       args:
         os: $OS7
+        buildrepo: php81build
   rocky8build:
     volumes:
       - rpm8rocky:/home/centos/rpmbuild/RPMS
@@ -16,6 +17,7 @@ services:
       dockerfile: Dockerfile.php8x
       args:
         os: $RL8
+        buildrepo: php81build
   stream9build:
     volumes:
       - rpm9stream:/home/centos/rpmbuild/RPMS
@@ -24,6 +26,7 @@ services:
       dockerfile: Dockerfile.php8x
       args:
         os: $OS9
+        buildrepo: php81build
 
 volumes:
   rpm7:

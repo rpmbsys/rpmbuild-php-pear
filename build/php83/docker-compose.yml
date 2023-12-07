@@ -6,16 +6,16 @@ services:
       dockerfile: Dockerfile.el7
       args:
         centos: $OS7
-    image: aursu/pearbuild:${OS7TAG}-php-7.4
+    image: aursu/pearbuild:${OS7TAG}-php-8.3
   rocky8build:
     build:
       context: .
       args:
         os: $RL8
-    image: aursu/pearbuild:${RL8TAG}-php-7.4
+    image: aursu/pearbuild:${RL8TAG}-php-8.3
   stream9build:
     build:
       context: .
       args:
         os: $OS9
-    image: aursu/pearbuild:${OS9TAG}-php-7.4
+    image: aursu/pearbuild:${OS9TAG}-php-8.3

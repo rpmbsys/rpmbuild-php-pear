@@ -1,5 +1,5 @@
 ARG os=7.9.2009
-ARG buildrepo=php74build
+ARG buildrepo=php83build
 ARG image=build
 
 FROM aursu/${buildrepo}:${os}-${image}
@@ -11,5 +11,5 @@ RUN chown -R $BUILD_USER ${BUILD_TOPDIR}/{SOURCES,SPECS}
 
 USER $BUILD_USER
 
-ENTRYPOINT ["/usr/bin/rpmbuild", "php7-pear.spec"]
+ENTRYPOINT ["/usr/bin/rpmbuild", "php8-pear.spec"]
 CMD ["-ba"]
