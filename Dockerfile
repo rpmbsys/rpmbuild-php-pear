@@ -1,4 +1,4 @@
-ARG os=7.9.2009
+ARG os=9.4.20240523
 ARG buildrepo=php83build
 ARG image=build
 

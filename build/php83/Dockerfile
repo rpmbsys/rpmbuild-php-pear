@@ -1,4 +1,4 @@
-ARG os=8.7.20221112
+ARG os=9.4.20240523
 FROM aursu/php83build:${os}-build
 
 RUN dnf -y --enablerepo=bintray-phpcustom install \
