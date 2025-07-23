@@ -12,10 +12,8 @@
 %define debug_package %{nil}
 
 %global getoptver 1.4.3
-%global arctarver 1.4.14
-# https://pear.php.net/bugs/bug.php?id=19367
-# Structures_Graph 1.0.4 - incorrect FSF address
-%global structver 1.1.1
+%global arctarver 1.6.0
+%global structver 1.2.0
 %global xmlutil   1.4.5
 %global manpages  1.10.0
 
@@ -29,8 +27,8 @@
 
 Summary: PHP Extension and Application Repository framework
 Name: php-pear
-Version: 1.10.14
-Release: 1%{?dist}
+Version: 1.10.16
+Release: 2%{?dist}
 Epoch: 1
 # BSD-2-Clause: PEAR, PEAR_Manpages, Archive_Tar, Console_Getopt
 # BSD-3-Clause: XML_Util
@@ -59,7 +57,7 @@ BuildRequires: %{_bindir}/gpg
 # For pecl_xmldir macro
 BuildRequires: php-devel
 %if %{with_tests}
-BuildRequires:  %{_bindir}/phpunit
+BuildRequires:  %{_bindir}/phpunit7
 %endif
 %if 0%{?fedora}
 BuildRequires:  php-fedora-autoloader-devel
@@ -257,11 +255,12 @@ LOG=$PWD/rpmlog
 ret=0
 
 cd %{buildroot}%{_datadir}/tests/pear/Structures_Graph/tests
-phpunit \
-   AllTests || ret=1
+phpunit7  \
+  --include-path=%{buildroot}%{_datadir}/pear \
+  . || ret=1
 
 cd %{buildroot}%{_datadir}/tests/pear/XML_Util/tests
-phpunit \
+phpunit7 \
    --bootstrap=/usr/share/pear/XML/Util/autoload.php \
    --test-suffix .php . || ret=1
 
@@ -385,6 +384,9 @@ fi
 
 
 %changelog
+* Mon Jul 21 2025 Remi Collet <remi@remirepo.net> - 1.10.16-2
+- update Archive_Tar to 1.6.0
+
 * Mon Nov 27 2023 Remi Collet <remi@remirepo.net> - 1.10.14-1
 - update to 1.10.14
 
