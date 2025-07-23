@@ -1,19 +1,13 @@
 services:
-  rocky8build:
-    build:
-      context: .
-      args:
-        os: $RL8
-    image: aursu/pearbuild:${RL8TAG}-php-8.2
   rocky9build:
     build:
       context: .
       args:
         os: $RL9
     image: aursu/pearbuild:${RL9TAG}-php-8.2
-  stream9build:
+  rocky10build:
     build:
       context: .
       args:
-        os: $OS9
-    image: aursu/pearbuild:${OS9TAG}-php-8.2
+        os: $RL10
+    image: aursu/pearbuild:${RL10TAG}-php-8.2

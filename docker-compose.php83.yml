@@ -6,7 +6,7 @@ services:
       context: .
       args:
         os: $RL10
-        buildrepo: php82build
+        buildrepo: php83build
   rocky9build:
     volumes:
       - rpm9rocky:/home/centos/rpmbuild/RPMS
@@ -14,7 +14,7 @@ services:
       context: .
       args:
         os: $RL9
-        buildrepo: php82build
+        buildrepo: php83build
 
 volumes:
   rpm9rocky:

@@ -4,10 +4,10 @@ services:
       context: .
       args:
         os: $RL9
-    image: aursu/pearbuild:${RL9TAG}-php-8.3
+    image: aursu/pearbuild:${RL9TAG}-php-8.1
   rocky10build:
     build:
       context: .
       args:
         os: $RL10
-    image: aursu/pearbuild:${RL10TAG}-php-8.3
+    image: aursu/pearbuild:${RL10TAG}-php-8.1

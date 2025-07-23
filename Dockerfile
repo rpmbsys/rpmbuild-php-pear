@@ -1,5 +1,5 @@
-ARG os=9.4.20240523
-ARG buildrepo=php83build
+ARG os=10.0.20250606
+ARG buildrepo=php84build
 ARG image=build
 
 FROM aursu/${buildrepo}:${os}-${image}
