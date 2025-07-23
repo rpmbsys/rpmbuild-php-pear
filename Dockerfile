@@ -4,6 +4,10 @@ ARG image=build
 
 FROM aursu/${buildrepo}:${os}-${image}
 
+RUN dnf -y install \
+        gnupg2 \
+    && dnf clean all && rm -rf /var/cache/dnf /var/lib/rpm/__db*
+
 COPY SOURCES ${BUILD_TOPDIR}/SOURCES
 COPY SPECS ${BUILD_TOPDIR}/SPECS
 
