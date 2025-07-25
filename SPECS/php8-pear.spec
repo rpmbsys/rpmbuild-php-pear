@@ -28,7 +28,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: php-pear
 Version: 1.10.16
-Release: 2%{?dist}
+Release: 1%{?dist}
 Epoch: 1
 # BSD-2-Clause: PEAR, PEAR_Manpages, Archive_Tar, Console_Getopt
 # BSD-3-Clause: XML_Util
@@ -42,7 +42,7 @@ Source3: cleanup.php
 Source10: pear.sh
 Source11: pecl.sh
 Source12: peardev.sh
-Source13: macros.pear.php7
+Source13: macros.pear
 Source21: http://pear.php.net/get/Archive_Tar-%{arctarver}.tgz
 Source22: http://pear.php.net/get/Console_Getopt-%{getoptver}.tgz
 Source23: http://pear.php.net/get/Structures_Graph-%{structver}.tgz
@@ -83,27 +83,26 @@ Provides: php-autoloader(pear/structures_graph) = %{structver}
 Provides: php-autoloader(pear/xml_util) = %{xmlutil}
 %endif
 
-
 Requires:  php(language) >= 8
-Requires:  php-cli >= 8
+Requires:  php-cli
 # phpci detected extension
 # PEAR (date, spl always builtin):
-Requires:  php-ftp >= 8
-Requires:  php-pcre >= 8
-Requires:  php-posix >= 8
-Requires:  php-tokenizer >= 8
-Requires:  php-xml >= 8
-Requires:  php-zlib >= 8
+Requires:  php-ftp
+Requires:  php-pcre
+Requires:  php-posix
+Requires:  php-tokenizer
+Requires:  php-xml
+Requires:  php-zlib
 # Console_Getopt: pcre
 # Archive_Tar: pcre, posix, zlib
-Requires:  php-bz2 >= 8
+Requires:  php-bz2
 # Structures_Graph: none
 # XML_Util: pcre
 # optional: overload and xdebug
 # for /var/www/html ownership
 Requires: httpd-filesystem
 %if 0%{?fedora}
-Requires: php-composer(fedora/autoloader)
+Recommends: php-composer(fedora/autoloader)
 %endif
 
 
@@ -165,8 +164,6 @@ phpab --template fedora \
 
 
 %install
-rm -rf %{buildroot}
-
 export PHP_PEAR_SYSCONF_DIR=%{_sysconfdir}
 export PHP_PEAR_SIG_KEYDIR=%{_sysconfdir}/pearkeys
 export PHP_PEAR_SIG_BIN=%{_bindir}/gpg
@@ -277,7 +274,6 @@ exit $ret
 echo 'Test suite disabled (missing "--with tests" option)'
 %endif
 
-%if 0%{?fedora} >= 24 || 0%{?rhel} >= 8
 # Register newly installed PECL packages
 %transfiletriggerin -- %{pecl_xmldir}
 while read file; do
@@ -299,56 +295,7 @@ while ($file=fgets(STDIN)) {
 }' | while read  name; do
   %{_bindir}/pecl uninstall --nodeps --ignore-errors --register-only "$name" >/dev/null || :
 done
-%endif
 
-%if 0%{?fedora} < 25 && 0%{?rhel} < 8
-%pre
-# Manage relocation of metadata, before update to pear
-if [ -d %{peardir}/.registry -a ! -d %{metadir}/.registry ]; then
-  mkdir -p %{metadir}
-  mv -f %{peardir}/.??* %{metadir}
-fi
-
-
-%post
-# force new value as pear.conf is (noreplace)
-current=$(%{_bindir}/pear config-get test_dir system)
-if [ "$current" != "%{_datadir}/tests/pear" ]; then
-%{_bindir}/pear config-set \
-    test_dir %{_datadir}/tests/pear \
-    system >/dev/null || :
-fi
-
-current=$(%{_bindir}/pear config-get data_dir system)
-if [ "$current" != "%{_datadir}/pear-data" ]; then
-%{_bindir}/pear config-set \
-    data_dir %{_datadir}/pear-data \
-    system >/dev/null || :
-fi
-
-current=$(%{_bindir}/pear config-get metadata_dir system)
-if [ "$current" != "%{metadir}" ]; then
-%{_bindir}/pear config-set \
-    metadata_dir %{metadir} \
-    system >/dev/null || :
-fi
-
-current=$(%{_bindir}/pear config-get -c pecl doc_dir system)
-if [ "$current" != "%{_docdir}/pecl" ]; then
-%{_bindir}/pear config-set \
-    -c pecl \
-    doc_dir %{_docdir}/pecl \
-    system >/dev/null || :
-fi
-
-current=$(%{_bindir}/pear config-get -c pecl test_dir system)
-if [ "$current" != "%{_datadir}/tests/pecl" ]; then
-%{_bindir}/pear config-set \
-    -c pecl \
-    test_dir %{_datadir}/tests/pecl \
-    system >/dev/null || :
-fi
-%endif
 
 %postun
 if [ $1 -eq 0 -a -d %{metadir}/.registry ] ; then
@@ -384,17 +331,72 @@ fi
 
 
 %changelog
-* Mon Jul 21 2025 Remi Collet <remi@remirepo.net> - 1.10.16-2
-- update Archive_Tar to 1.6.0
+* Mon Nov 25 2024 Remi Collet <remi@remirepo.net> - 1:1.10.16-1
+- update to 1.10.16
 
-* Mon Nov 27 2023 Remi Collet <remi@remirepo.net> - 1.10.14-1
+* Fri Jul 19 2024 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.15-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_41_Mass_Rebuild
+
+* Tue Mar 19 2024 Remi Collet <remi@remirepo.net> - 1.10.15-3
+- update Structures_Graph to 1.2.0 (no change)
+
+* Tue Mar 19 2024 Remi Collet <remi@remirepo.net> - 1:1.10.15-2
+- update Archive_Tar to 1.5.0
+
+* Tue Mar 12 2024 Remi Collet <remi@remirepo.net> - 1:1.10.15-1
+- update to 1.10.15
+
+* Mon Jan 29 2024 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.14-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_40_Mass_Rebuild
+
+* Thu Jan 25 2024 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.14-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_40_Mass_Rebuild
+
+* Sun Jan 21 2024 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.14-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_40_Mass_Rebuild
+
+* Mon Nov 27 2023 Remi Collet <remi@remirepo.net> - 1:1.10.14-1
 - update to 1.10.14
+- drop patches merged upstream
 
-* Wed Aug 11 2021 Remi Collet <remi@remirepo.net> - 1.10.13-1
+* Thu Nov 23 2023 Remi Collet <remi@remirepo.net> - 1:1.10.13-7
+- fix more deprecations from
+  https://github.com/pear/pear-core/pull/127
+
+* Fri Jul 21 2023 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.13-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_39_Mass_Rebuild
+
+* Mon Feb 20 2023 Remi Collet <remi@remirepo.net> - 1:1.10.13-5
+- fix PHP 8.2 deprecations using patch from
+  https://github.com/pear/pear-core/pull/124
+- use SPDX license IDs
+
+* Fri Jan 20 2023 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.13-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_38_Mass_Rebuild
+
+* Fri Jul 22 2022 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.13-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
+
+* Fri Jan 21 2022 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.13-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
+
+* Wed Aug 11 2021 Remi Collet <remi@remirepo.net> - 1:1.10.13-1
 - update to 1.10.13
+
+* Fri Jul 23 2021 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.12-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
 
 * Wed Jul 21 2021 Remi Collet <remi@remirepo.net> - 1:1.10.12-9
 - update Archive_Tar to 1.4.14
+
+* Fri Jun 18 2021 Remi Collet <remi@remirepo.net> - 1:1.10.12-8
+- fedora/autoloader is optional
+
+* Mon May 10 2021 Remi Collet <remi@remirepo.net> - 1:1.10.12-7
+- update Archive_Tar to 1.4.13
+
+* Wed Jan 27 2021 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.12-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
 
 * Tue Jan 19 2021 Remi Collet <remi@remirepo.net> - 1:1.10.12-5
 - update Archive_Tar to 1.4.12
@@ -408,12 +410,12 @@ fi
 * Tue Jul 28 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.12-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
 
-* Mon Apr 20 2020 Remi Collet <remi@remirepo.net> - 1.10.12-1
+* Mon Apr 20 2020 Remi Collet <remi@remirepo.net> - 1:1.10.12-1
 - update PEAR to 1.10.12
 - update XML_Util to 1.4.5
 - drop patch merged upstream
 
-* Tue Apr 14 2020 Remi Collet <remi@remirepo.net> - 1.10.11-1
+* Tue Apr 14 2020 Remi Collet <remi@remirepo.net> - 1:1.10.11-1
 - update to 1.10.11
 - drop patch merged upstream
 
@@ -898,7 +900,7 @@ fi
 - fix /usr/bin/{pecl,peardev} (#174882)
 
 * Thu Dec  1 2005 Joe Orton <jorton@redhat.com> 1:1.4.5-2
-- add virtual provides (#173806)
+- add virtual provides (#173806) 
 
-* Wed Nov 23 2005 Joe Orton <jorton@redhat.com> 1.4.5-1
+* Wed Nov 23 2005 Joe Orton <jorton@redhat.com> 1:1.4.5-1
 - initial build (Epoch: 1 to allow upgrade from php-pear-5.x)
