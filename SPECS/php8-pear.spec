@@ -27,7 +27,7 @@
 
 Summary: PHP Extension and Application Repository framework
 Name: php-pear
-Version: 1.10.16
+Version: 1.10.18
 Release: 1%{?dist}
 Epoch: 1
 # BSD-2-Clause: PEAR, PEAR_Manpages, Archive_Tar, Console_Getopt
@@ -50,7 +50,7 @@ Source24: http://pear.php.net/get/XML_Util-%{xmlutil}.tgz
 Source25: http://pear.php.net/get/PEAR_Manpages-%{manpages}.tgz
 
 BuildArch: noarch
-BuildRequires: php(language) >= 8
+BuildRequires: php(language) > 5.4
 BuildRequires: php-cli
 BuildRequires: php-xml
 BuildRequires: %{_bindir}/gpg
@@ -83,7 +83,11 @@ Provides: php-autoloader(pear/structures_graph) = %{structver}
 Provides: php-autoloader(pear/xml_util) = %{xmlutil}
 %endif
 
-Requires:  php(language) >= 8
+# Archive_Tar requires 5.2
+# XML_Util, Structures_Graph require 5.3
+# Console_Getopt requires 5.4
+# PEAR requires 5.4
+Requires:  php(language) > 5.4
 Requires:  php-cli
 # phpci detected extension
 # PEAR (date, spl always builtin):
@@ -331,6 +335,29 @@ fi
 
 
 %changelog
+* Mon Jan 26 2026 Remi Collet <remi@remirepo.net> - 1.10.18-1
+- update to 1.10.18
+- drop patch merged upstream
+
+* Wed Jan 21 2026 Remi Collet <remi@remirepo.net> - 1.10.17-2
+- remove report_memleaks usage with PHP 8.5 using patch from
+  https://github.com/pear/pear-core/pull/164
+
+* Sat Jan 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.17-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_44_Mass_Rebuild
+
+* Mon Dec 15 2025 Remi Collet <remi@remirepo.net> - 1.10.17-1
+- update to 1.10.17
+
+* Fri Jul 25 2025 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.16-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_43_Mass_Rebuild
+
+* Mon Jul 21 2025 Remi Collet <remi@remirepo.net> - 1.10.16-2
+- update Archive_Tar to 1.6.0
+
+* Sat Jan 18 2025 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.16-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_42_Mass_Rebuild
+
 * Mon Nov 25 2024 Remi Collet <remi@remirepo.net> - 1:1.10.16-1
 - update to 1.10.16
 
