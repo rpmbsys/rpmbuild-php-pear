@@ -2,7 +2,7 @@ ARG os=8.10.20240528
 ARG buildrepo=php56build
 ARG image=build
 
-FROM aursu/${buildrepo}:${os}-${image}
+FROM ghcr.io/rpmbsys/${buildrepo}:${os}-${image}
 
 RUN dnf -y install \
         gnupg2 \

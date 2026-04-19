@@ -1,5 +1,7 @@
 ARG os=8.10.20240528
-FROM aursu/php56build:${os}-build
+ARG buildrepo=php56build
+ARG image=build
+FROM ghcr.io/rpmbsys/${buildrepo}:${os}-${image}
 
 RUN dnf -y --enablerepo=bintray-phpcustom install \
         php-pear \
