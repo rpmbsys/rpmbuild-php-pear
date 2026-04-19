@@ -8,12 +8,11 @@
 %global peardir %{_datadir}/pear
 %global metadir %{_localstatedir}/lib/pear
 
-%define _debugsource_template %{nil}
-%define debug_package %{nil}
-
 %global getoptver 1.4.3
-%global arctarver 1.6.0
-%global structver 1.2.0
+%global arctarver 1.4.14
+# https://pear.php.net/bugs/bug.php?id=19367
+# Structures_Graph 1.0.4 - incorrect FSF address
+%global structver 1.1.1
 %global xmlutil   1.4.5
 %global manpages  1.10.0
 
@@ -27,7 +26,7 @@
 
 Summary: PHP Extension and Application Repository framework
 Name: php-pear
-Version: 1.10.18
+Version: 1.10.14
 Release: 1%{?dist}
 Epoch: 1
 # BSD-2-Clause: PEAR, PEAR_Manpages, Archive_Tar, Console_Getopt
@@ -57,7 +56,7 @@ BuildRequires: %{_bindir}/gpg
 # For pecl_xmldir macro
 BuildRequires: php-devel
 %if %{with_tests}
-BuildRequires:  %{_bindir}/phpunit7
+BuildRequires:  %{_bindir}/phpunit
 %endif
 %if 0%{?fedora}
 BuildRequires:  php-fedora-autoloader-devel
@@ -221,7 +220,7 @@ install -m 644 -D macros.pear \
 
 # apply patches on installed PEAR tree
 pushd %{buildroot}%{peardir}
-  : none
+: no patch
 popd
 
 # Why this file here ?
@@ -256,12 +255,11 @@ LOG=$PWD/rpmlog
 ret=0
 
 cd %{buildroot}%{_datadir}/tests/pear/Structures_Graph/tests
-phpunit7  \
-  --include-path=%{buildroot}%{_datadir}/pear \
-  . || ret=1
+phpunit \
+   AllTests || ret=1
 
 cd %{buildroot}%{_datadir}/tests/pear/XML_Util/tests
-phpunit7 \
+phpunit \
    --bootstrap=/usr/share/pear/XML/Util/autoload.php \
    --test-suffix .php . || ret=1
 
@@ -335,186 +333,23 @@ fi
 
 
 %changelog
-* Mon Jan 26 2026 Remi Collet <remi@remirepo.net> - 1.10.18-1
-- update to 1.10.18
-- drop patch merged upstream
+* Mon Nov 27 2023 Remi Collet <rcollet@redhat.com> - 1:1.10.14-1
+- update PEAR to 1.10.14 for PHP 8.2 RHEL-14705
 
-* Wed Jan 21 2026 Remi Collet <remi@remirepo.net> - 1.10.17-2
-- remove report_memleaks usage with PHP 8.5 using patch from
-  https://github.com/pear/pear-core/pull/164
-
-* Sat Jan 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.17-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_44_Mass_Rebuild
-
-* Mon Dec 15 2025 Remi Collet <remi@remirepo.net> - 1.10.17-1
-- update to 1.10.17
-
-* Fri Jul 25 2025 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.16-4
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_43_Mass_Rebuild
-
-* Mon Jul 21 2025 Remi Collet <remi@remirepo.net> - 1.10.16-2
-- update Archive_Tar to 1.6.0
-
-* Sat Jan 18 2025 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.16-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_42_Mass_Rebuild
-
-* Mon Nov 25 2024 Remi Collet <remi@remirepo.net> - 1:1.10.16-1
-- update to 1.10.16
-
-* Fri Jul 19 2024 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.15-4
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_41_Mass_Rebuild
-
-* Tue Mar 19 2024 Remi Collet <remi@remirepo.net> - 1.10.15-3
-- update Structures_Graph to 1.2.0 (no change)
-
-* Tue Mar 19 2024 Remi Collet <remi@remirepo.net> - 1:1.10.15-2
-- update Archive_Tar to 1.5.0
-
-* Tue Mar 12 2024 Remi Collet <remi@remirepo.net> - 1:1.10.15-1
-- update to 1.10.15
-
-* Mon Jan 29 2024 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.14-4
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_40_Mass_Rebuild
-
-* Thu Jan 25 2024 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.14-3
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_40_Mass_Rebuild
-
-* Sun Jan 21 2024 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.14-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_40_Mass_Rebuild
-
-* Mon Nov 27 2023 Remi Collet <remi@remirepo.net> - 1:1.10.14-1
-- update to 1.10.14
-- drop patches merged upstream
-
-* Thu Nov 23 2023 Remi Collet <remi@remirepo.net> - 1:1.10.13-7
-- fix more deprecations from
-  https://github.com/pear/pear-core/pull/127
-
-* Fri Jul 21 2023 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.13-6
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_39_Mass_Rebuild
-
-* Mon Feb 20 2023 Remi Collet <remi@remirepo.net> - 1:1.10.13-5
-- fix PHP 8.2 deprecations using patch from
-  https://github.com/pear/pear-core/pull/124
-- use SPDX license IDs
-
-* Fri Jan 20 2023 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.13-4
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_38_Mass_Rebuild
-
-* Fri Jul 22 2022 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.13-3
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
-
-* Fri Jan 21 2022 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.13-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
-
-* Wed Aug 11 2021 Remi Collet <remi@remirepo.net> - 1:1.10.13-1
-- update to 1.10.13
-
-* Fri Jul 23 2021 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.12-10
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
-
-* Wed Jul 21 2021 Remi Collet <remi@remirepo.net> - 1:1.10.12-9
+* Tue Dec 14 2021 Remi Collet <rcollet@redhat.com> - 1:1.10.13-1
+- update PEAR to 1.10.13
 - update Archive_Tar to 1.4.14
 
-* Fri Jun 18 2021 Remi Collet <remi@remirepo.net> - 1:1.10.12-8
-- fedora/autoloader is optional
-
-* Mon May 10 2021 Remi Collet <remi@remirepo.net> - 1:1.10.12-7
-- update Archive_Tar to 1.4.13
-
-* Wed Jan 27 2021 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.12-6
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
-
-* Tue Jan 19 2021 Remi Collet <remi@remirepo.net> - 1:1.10.12-5
-- update Archive_Tar to 1.4.12
-
-* Mon Nov 23 2020 Remi Collet <remi@remirepo.net> - 1:1.10.12-4
-- update Archive_Tar to 1.4.11
-
-* Wed Sep 16 2020 Remi Collet <remi@remirepo.net> - 1:1.10.12-3
-- update Archive_Tar to 1.4.10
-
-* Tue Jul 28 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.12-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
-
-* Mon Apr 20 2020 Remi Collet <remi@remirepo.net> - 1:1.10.12-1
+* Thu May 14 2020 Remi Collet <rcollet@redhat.com> - 1:1.10.12-1
 - update PEAR to 1.10.12
-- update XML_Util to 1.4.5
-- drop patch merged upstream
-
-* Tue Apr 14 2020 Remi Collet <remi@remirepo.net> - 1:1.10.11-1
-- update to 1.10.11
-- drop patch merged upstream
-
-* Mon Mar 30 2020 Remi Collet <remi@remirepo.net> - 1:1.10.10-7
-- add patch for PEAR and PHP 7.4 from
-  https://github.com/pear/pear-core/pull/103
-
-* Thu Jan 30 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.10-6
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
-
-* Thu Dec 12 2019 Remi Collet <remi@remirepo.net> - 1:1.10.10-5
-- add patch for XML_Util and PHP 7.4 from
-  https://github.com/pear/XML_Util/pull/12
-
-* Fri Dec  6 2019 Remi Collet <remi@remirepo.net> - 1:1.10.10-4
-- update XML_Util to 1.4.4
-- drop patch merged upstream
-
-* Thu Dec  5 2019 Remi Collet <remi@remirepo.net> - 1:1.10.10-3
 - update Archive_Tar to 1.4.9
-- add patch for XML_Util and PHP 7.4 from
-  https://github.com/pear/XML_Util/pull/11
-
-* Thu Nov 21 2019 Remi Collet <remi@remirepo.net> - 1:1.10.10-2
 - update Console_Getopt to 1.4.3
-- drop patches merged upstream
+- update XML_Util to 1.4.5
 
-* Wed Nov 20 2019 Remi Collet <remi@remirepo.net> - 1:1.10.10-1
-- update PEAR to 1.10.10
-
-* Tue Nov 19 2019 Remi Collet <remi@remirepo.net> - 1:1.10.9-5
-- add upstream patches for PHP 7.4
-
-* Tue Oct 22 2019 Remi Collet <remi@remirepo.net> - 1:1.10.9-4
-- update Archive_Tar to 1.4.8
-
-* Fri Jul 26 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.9-3
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
-
-* Mon Apr  8 2019 Remi Collet <remi@remirepo.net> - 1:1.10.9-2
-- update Archive_Tar to 1.4.7
-
-* Thu Mar 14 2019 Remi Collet <remi@remirepo.net> - 1:1.10.9-1
+* Tue May  7 2019 Remi Collet <rcollet@redhat.com> - 1:1.10.9-1
 - update PEAR to 1.10.9
-
-* Fri Feb  8 2019 Remi Collet <remi@remirepo.net> - 1:1.10.8-1
-- update PEAR to 1.10.8
-- source generated from github tag
-- drop patch merged upstream
-
-* Thu Feb  7 2019 Remi Collet <remi@remirepo.net> - 1:1.10.7-5
+- update Archive_Tar to 1.4.7
 - update Console_Getopt to 1.4.2
-
-* Sat Feb 02 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.7-4
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
-
-* Thu Jan  3 2019 Remi Collet <remi@remirepo.net> - 1:1.10.7-3
-- update Archive_Tar to 1.4.5
-
-* Fri Dec 21 2018 Remi Collet <remi@remirepo.net> - 1:1.10.7-2
-- update Archive_Tar to 1.4.4
-- drop PHP 7.2 deprecated option, patch from
-  https://github.com/pear/pear-core/pull/83
-
-* Thu Dec  6 2018 Remi Collet <remi@remirepo.net> - 1:1.10.7-1
-- update PEAR to 1.10.7
-
-* Thu Aug 23 2018 Remi Collet <remi@remirepo.net> - 1:1.10.6-1
-- update PEAR to 1.10.6
-
-* Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.10.5-9
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
 * Wed Apr 11 2018 Remi Collet <remi@remirepo.net> - 1:1.10.5-8
 - require /usr/bin/gpg instead of gnupg
@@ -929,5 +764,5 @@ fi
 * Thu Dec  1 2005 Joe Orton <jorton@redhat.com> 1:1.4.5-2
 - add virtual provides (#173806) 
 
-* Wed Nov 23 2005 Joe Orton <jorton@redhat.com> 1:1.4.5-1
+* Wed Nov 23 2005 Joe Orton <jorton@redhat.com> 1.4.5-1
 - initial build (Epoch: 1 to allow upgrade from php-pear-5.x)

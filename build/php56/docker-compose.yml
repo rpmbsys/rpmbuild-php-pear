@@ -1,0 +1,7 @@
+services:
+  rocky8build:
+    build:
+      context: .
+      args:
+        os: $RL8
+    image: aursu/pearbuild:${RL8TAG}-php-5.6
