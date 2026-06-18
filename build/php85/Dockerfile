@@ -1,5 +1,5 @@
 ARG os=10.1.20251126
-FROM aursu/php81build:${os}-build
+FROM aursu/php85build:${os}-build
 
 RUN dnf -y --enablerepo=bintray-phpcustom install \
         php-pear \
